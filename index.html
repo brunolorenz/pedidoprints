@@ -942,7 +942,7 @@ body {
 
 <div style="height:16px"></div>
 
-<button class="fab-pdf" id="fab-pdf" onclick="gerarPDF()">Gerar PDF ↓</button>
+<button class="fab-pdf" id="fab-pdf" onclick="enviarWhatsApp()">Enviar pelo WhatsApp ↗</button>
 
 <script>
 const ARTES = [
@@ -1066,6 +1066,7 @@ function renderCard(arte, i) {
                oninput="est[${i}].papel=this.value;atualizarCard(${i})">
       </div>
 
+      ${ARTES[i] && ARTES[i].novaArte ? `
       <div class="uso-unico-row" onclick="toggleUso(${i})">
         <div>
           <div class="uso-unico-label">Pedido de cliente específico</div>
@@ -1090,7 +1091,7 @@ function renderCard(arte, i) {
           <input type="url" value="${e.clienteLink}" placeholder="https://drive.google.com/…"
                  oninput="est[${i}].clienteLink=this.value">
         </div>
-      </div>
+      </div>` : ''}
 
       <div class="editor-acoes">
         <button class="btn-confirmar" onclick="fecharCard(${i})">Confirmar ✓</button>
@@ -1253,7 +1254,7 @@ function confirmarNovaArte() {
   const versao = document.getElementById('nova-versao').value.trim() || 'A';
   if (!nome) { document.getElementById('nova-nome').focus(); return; }
   const idx = ARTES.length;
-  ARTES.push({nome, versao});
+  ARTES.push({nome, versao, novaArte: true});
   est[idx] = estadoVazio();
   document.getElementById('nova-nome').value = '';
   document.getElementById('nova-versao').value = '';
@@ -1422,7 +1423,82 @@ function setPosterTam(id, tam, val) {
   if (p) { p[tam] = Math.max(0, parseInt(val)||0); atualizarTotais(); }
 }
 
-function gerarPDF() { window.print(); }
+function enviarWhatsApp() {
+  const nomePedido = document.getElementById('pedido-nome').value.trim() || 'Pedido';
+  const hoje = new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
+  const MESES_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+  let linhas = [];
+
+  linhas.push(`🖨 *${nomePedido}*`);
+  linhas.push(`_${hoje}_`);
+  linhas.push('');
+
+  // ── ARTES ──
+  const artesComQtd = ARTES.map((arte, i) => ({arte, e: est[i]}))
+    .filter(({e}) => (e.a6+e.a5+e.a4+e.a3+e.a2) > 0);
+
+  if (artesComQtd.length > 0) {
+    linhas.push('*ARTES*');
+    artesComQtd.forEach(({arte, e}) => {
+      const label = `${arte.nome} ${arte.versao}`;
+      let qtdParts = [];
+      if (e.a6) qtdParts.push(`${e.a6}×A6`);
+      if (e.a5) qtdParts.push(`${e.a5}×A5`);
+      if (e.a4) qtdParts.push(`${e.a4}×A4`);
+      if (e.a3) qtdParts.push(`${e.a3}×A3`);
+      if (e.a2) qtdParts.push(`${e.a2}×A2`);
+      const papel = e.papel ? ` — ${e.papel}` : '';
+      linhas.push(`• *${label}*: ${qtdParts.join(', ')}${papel}`);
+      if (e.usoUnico) {
+        linhas.push(`  ↳ _Uso único${e.clienteNome ? ' · ' + e.clienteNome : ''}_`);
+        if (e.clienteArquivo) linhas.push(`  ↳ Arquivo: ${e.clienteArquivo}`);
+        if (e.clienteLink)    linhas.push(`  ↳ ${e.clienteLink}`);
+      }
+    });
+    linhas.push('');
+  }
+
+  // ── POSTERS ──
+  const postersOk = posters.filter(p => (p.a3||0)+(p.a2||0)+(p.a1||0) > 0);
+  if (postersOk.length > 0) {
+    linhas.push('*POSTERS · PREDINHO DO DIA*');
+    postersOk.forEach(p => {
+      const mes = p.mes !== null ? MESES_FULL[p.mes] : '(mês não definido)';
+      const variante = p.variante === 'com' ? 'com endereços' : p.variante === 'sem' ? 'sem endereços' : '';
+      let qtdParts = [];
+      if (p.a3) qtdParts.push(`${p.a3}×A3`);
+      if (p.a2) qtdParts.push(`${p.a2}×A2`);
+      if (p.a1) qtdParts.push(`${p.a1}×A1`);
+      linhas.push(`• *${mes}* (${variante}): ${qtdParts.join(', ')}`);
+    });
+    linhas.push('');
+  }
+
+  // ── TOTAIS ──
+  const tots = {A6:0,A5:0,A4:0,A3:0,A2:0,A1:0};
+  ARTES.forEach((_, i) => {
+    const e = est[i];
+    tots.A6+=e.a6||0; tots.A5+=e.a5||0; tots.A4+=e.a4||0;
+    tots.A3+=e.a3||0; tots.A2+=e.a2||0;
+  });
+  postersOk.forEach(p => {
+    tots.A3+=p.a3||0; tots.A2+=p.a2||0; tots.A1+=p.a1||0;
+  });
+  const totalGeral = Object.values(tots).reduce((a,b)=>a+b,0);
+
+  const totStr = Object.entries(tots)
+    .filter(([,v]) => v > 0)
+    .map(([k,v]) => `${v}×${k}`)
+    .join(' · ');
+
+  linhas.push(`*TOTAL: ${totalGeral} prints*`);
+  if (totStr) linhas.push(`${totStr}`);
+
+  const mensagem = linhas.join('\n');
+  const url = `https://wa.me/5551994791919?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, '_blank');
+}
 </script>
 </body>
 </html>
