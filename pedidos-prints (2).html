@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Pedido · Uns Predinhos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --cream: #f7f3ec;
+  --white: #ffffff;
+  --ink: #1c1814;
+  --mid: #8a7f74;
+  --rule: #e0d8ce;
+  --accent: #bf4a22;
+  --accent-bg: #fdf0eb;
+  --accent-border: #e8c4b4;
+  --green: #2a6049;
+  --green-bg: #eaf3ee;
+  --green-border: #b8d9c8;
+  --tag-bg: #f0e5d0;
+  --tag-ink: #7a5c20;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Instrument Sans', system-ui, sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html {
+  font-size: 16px;
+  background: var(--cream);
+  overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  min-height: 100dvh;
+  padding-bottom: 100px;
+  overflow-x: hidden;
+}
+
+/* ─── TOPO ─── */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--ink);
+  color: white;
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topo-logo {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-style: italic;
+  color: white;
+  line-height: 1;
+}
+
+.topo-meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.topo-data {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.02em;
+}
+
+.topo-contador {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  font-weight: 500;
+}
+.topo-contador strong { color: #f09070; }
+
+/* ─── NOME DO PEDIDO ─── */
+.pedido-nome-wrap {
+  padding: 14px 16px 10px;
+  background: var(--white);
+  border-bottom: 1px solid var(--rule);
+}
+
+.pedido-nome-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 5px;
+}
+
+.pedido-nome {
+  width: 100%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--ink);
+  -webkit-appearance: none;
+}
+.pedido-nome::placeholder { color: var(--rule); }
+
+/* ─── SEÇÃO ─── */
+.secao {
+  padding: 10px 16px 4px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: var(--cream);
+}
+
+/* ─── LISTA DE ARTES ─── */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--white);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ─── CARD DE ARTE ─── */
+.arte-card {
+  border-bottom: 1px solid var(--rule);
+  background: var(--white);
+  transition: background 0.1s;
+  position: relative;
+}
+.arte-card:last-child { border-bottom: none; }
+
+/* estado: preenchida */
+.arte-card.preenchida { background: var(--white); }
+.arte-card.preenchida .arte-trigger { border-left: 3px solid var(--green); padding-left: 13px; }
+
+/* estado: aberta */
+.arte-card.aberta .arte-trigger { background: var(--accent-bg); border-left: 3px solid var(--accent); padding-left: 13px; }
+
+/* ── trigger (toque para abrir) ── */
+.arte-trigger {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  min-height: 60px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s;
+}
+.arte-trigger:active { background: #f5ede8; }
+
+.trigger-left { display: flex; flex-direction: column; gap: 3px; }
+
+.arte-nome {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.versao-pill {
+  font-size: 9px;
+  color: var(--mid);
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 400;
+}
+
+.arte-resumo {
+  font-size: 12px;
+  color: var(--mid);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.resumo-qtd {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.resumo-papel {
+  color: var(--mid);
+}
+
+.uso-badge {
+  font-size: 9px;
+  background: var(--tag-bg);
+  color: var(--tag-ink);
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 1px solid #d4b8ae;
+}
+
+.trigger-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.check-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: transparent;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.preenchida .check-icon {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.chevron {
+  font-size: 12px;
+  color: var(--mid);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.aberta .chevron { transform: rotate(180deg); }
+
+/* ── painel de edição ── */
+.arte-editor {
+  display: none;
+  padding: 0 14px 16px;
+  background: var(--accent-bg);
+  border-top: 1px solid var(--accent-border);
+  flex-direction: column;
+  gap: 14px;
+  animation: slideDown 0.18s ease;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+.arte-card.aberta .arte-editor { display: flex; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── quantidades ── */
+.qtd-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  padding-top: 14px;
+}
+
+.qtd-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.qtd-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.qtd-field label {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* stepper: − número + */
+.stepper {
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  border: 1.5px solid var(--accent-border);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  min-width: 0;
+}
+
+.step-btn {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 44px;
+  border: none;
+  background: none;
+  font-size: 18px;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s;
+}
+.step-btn:active { background: var(--accent-bg); }
+
+.step-val {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 44px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  outline: none;
+  -webkit-appearance: none;
+  padding: 0;
+  width: 100%;
+}
+.step-val::-webkit-inner-spin-button,
+.step-val::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+/* ── papel ── */
+.papel-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.papel-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.papel-opcao {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 13px;
+  background: var(--white);
+  border: 1.5px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.papel-opcao.selecionado {
+  border-color: var(--accent);
+  background: white;
+}
+.papel-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+}
+.papel-opcao.selecionado .papel-radio {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.papel-opcao.selecionado .papel-radio::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+}
+
+.papel-livre {
+  width: 100%;
+  padding: 11px 13px;
+  background: var(--white);
+  border: 1.5px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  -webkit-appearance: none;
+  display: none;
+}
+.papel-livre.visivel { display: block; }
+.papel-livre:focus { border-color: var(--accent); }
+
+/* ── toggle uso único ── */
+.uso-unico-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--white);
+  border: 1.5px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.uso-unico-label { font-size: 13px; color: var(--ink); }
+.uso-unico-sub { font-size: 11px; color: var(--mid); margin-top: 1px; }
+
+.switch {
+  width: 44px; height: 26px;
+  background: var(--rule);
+  border-radius: 13px;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.switch.on { background: var(--accent); }
+.switch::after {
+  content: '';
+  width: 20px; height: 20px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px; left: 3px;
+  transition: left 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.switch.on::after { left: 21px; }
+
+.uso-unico-campos {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--tag-bg);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  border: 1px solid #d4b8ae;
+}
+.uso-unico-campos.visivel { display: flex; }
+
+.uu-campo label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tag-ink);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.uu-campo input {
+  width: 100%;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid #d4b8ae;
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  -webkit-appearance: none;
+}
+.uu-campo input:focus { border-color: var(--tag-ink); }
+
+/* ── ações do editor ── */
+.editor-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-confirmar {
+  flex: 1;
+  padding: 14px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.1s;
+}
+.btn-confirmar:active { opacity: 0.85; }
+
+.btn-limpar {
+  padding: 14px 16px;
+  background: none;
+  border: 1.5px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--mid);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.btn-limpar:active { background: var(--cream); }
+
+/* ─── NOVA ARTE ─── */
+.nova-arte-btn {
+  margin: 12px 16px;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1.5px dashed var(--rule);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--mid);
+  font-size: 13px;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.15s, color 0.15s;
+}
+.nova-arte-btn:active { border-color: var(--accent); color: var(--accent); }
+
+.nova-arte-form {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 16px 12px;
+  padding: 14px;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+.nova-arte-form.aberta { display: flex; }
+
+.nova-arte-form label {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.nova-arte-form input {
+  width: 100%;
+  padding: 11px 13px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+  -webkit-appearance: none;
+}
+.nova-arte-form input:focus { border-color: var(--accent); background: white; }
+
+.nova-arte-acoes { display: flex; gap: 8px; }
+.nova-arte-acoes .btn-confirmar { padding: 12px; font-size: 13px; }
+.nova-arte-acoes .btn-limpar { padding: 12px; }
+
+/* ─── TOTAIS ─── */
+.totais-wrap {
+  margin: 0 16px;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: none;
+}
+.totais-wrap.visivel { display: block; }
+
+.totais-titulo {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  padding: 10px 16px 6px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.totais-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.total-cel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 4px;
+  border-right: 1px solid var(--rule);
+  gap: 3px;
+}
+.total-cel:last-child { border-right: none; }
+
+.total-num {
+  font-family: var(--serif);
+  font-size: 24px;
+  line-height: 1;
+  color: var(--accent);
+}
+.total-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+/* ─── BOTÃO FLUTUANTE PDF ─── */
+.fab-pdf {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 16px 32px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(28,24,20,0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s, background 0.2s;
+  white-space: nowrap;
+  min-width: 200px;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.fab-pdf.visivel {
+  opacity: 1;
+  pointer-events: auto;
+}
+.fab-pdf:active { background: var(--accent); transform: translateX(-50%) scale(0.97); }
+
+/* ─── POSTERS ─── */
+.nova-poster-btn {
+  margin: 0 0 0;
+  padding: 14px 16px;
+  background: var(--white);
+  border-top: 1px dashed var(--rule);
+  border-bottom: 1px dashed var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--mid);
+  font-size: 13px;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s;
+}
+.nova-poster-btn:active { color: var(--accent); }
+
+/* card de poster — mais simples que arte, sem versão */
+.poster-card {
+  border-bottom: 1px solid var(--rule);
+  background: var(--white);
+  position: relative;
+}
+.poster-card:last-child { border-bottom: none; }
+
+.poster-card.preenchida .poster-trigger { border-left: 3px solid var(--green); padding-left: 13px; }
+.poster-card.aberta .poster-trigger { background: var(--accent-bg); border-left: 3px solid var(--accent); padding-left: 13px; }
+
+.poster-trigger {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  min-height: 60px;
+  -webkit-tap-highlight-color: transparent;
+}
+.poster-trigger:active { background: #f5ede8; }
+
+.poster-nome {
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.poster-variante-pill {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  font-weight: 400;
+}
+.poster-variante-pill.com { background: #e8f0e8; color: #2a6049; border-color: #b8d9c8; }
+.poster-variante-pill.sem { background: #f0e8e8; color: #7a2a2a; border-color: #d9b8b8; }
+
+.poster-resumo { font-size: 12px; color: var(--mid); margin-top: 2px; }
+.poster-resumo.ok { color: var(--green); font-weight: 600; }
+
+.poster-editor {
+  display: none;
+  padding: 0 14px 16px;
+  background: var(--accent-bg);
+  border-top: 1px solid var(--accent-border);
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+  animation: slideDown 0.18s ease;
+}
+.poster-card.aberta .poster-editor { display: flex; }
+
+/* mês selector */
+.mes-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  padding-top: 14px;
+}
+
+.mes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.mes-btn {
+  padding: 10px 4px;
+  background: var(--white);
+  border: 1.5px solid var(--accent-border);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.12s;
+  line-height: 1.2;
+}
+.mes-btn:active { background: var(--accent-bg); }
+.mes-btn.selecionado {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* variante com/sem endereços */
+.variante-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.variante-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.variante-btn {
+  padding: 12px 8px;
+  background: var(--white);
+  border: 1.5px solid var(--accent-border);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.12s;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+}
+.variante-btn small { font-size: 10px; color: var(--mid); font-weight: 400; }
+.variante-btn:active { background: var(--accent-bg); }
+.variante-btn.selecionado {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+.variante-btn.selecionado.com { border-color: var(--green); background: var(--green-bg); }
+
+/* qtd poster — stepper único */
+.poster-qtd-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.poster-qtd-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.poster-qtd-wrap .stepper { max-width: 140px; }
+
+/* remover poster */
+.btn-remover-poster {
+  background: none;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--mid);
+  cursor: pointer;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-remover-poster:active { color: var(--accent); border-color: var(--accent); }
+
+/* ─── PRINT — posters ─── */
+@media print {
+  .poster-card:not(.preenchida) { display: none; }
+  .nova-poster-btn { display: none !important; }
+  .poster-editor { display: none !important; }
+}
+@media print {
+  @page { margin: 14mm 12mm; size: A4; }
+  .topo { background: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .fab-pdf, .nova-arte-btn, .nova-arte-form, .arte-editor,
+  .btn-limpar, .btn-confirmar { display: none !important; }
+  body { padding-bottom: 0; }
+  .arte-card:not(.preenchida) { display: none; }
+  .arte-trigger { border-left: none !important; padding-left: 16px !important; }
+  .arte-trigger:active { background: white; }
+  .totais-wrap { display: block !important; border: 1px solid #ccc; margin: 12px 0 0; }
+  .secao { display: none; }
+  .pedido-nome-wrap { border-bottom: 1px solid #ccc; }
+}
+
+/* ─── DESKTOP ─── */
+@media (min-width: 600px) {
+  body { max-width: 520px; margin: 0 auto; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); min-height: 100vh; }
+  .qtd-grid { gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topo">
+  <div class="topo-logo">Uns Predinhos</div>
+  <div class="topo-meta">
+    <div class="topo-data" id="topo-data"></div>
+    <div class="topo-contador" id="topo-contador" style="display:none"></div>
+  </div>
+</div>
+
+<div class="pedido-nome-wrap">
+  <div class="pedido-nome-label">Nome do pedido</div>
+  <input class="pedido-nome" id="pedido-nome" type="text" placeholder="ex: Reposição maio…" spellcheck="false">
+</div>
+
+<div class="secao">Artes</div>
+<div class="lista" id="lista"></div>
+
+<div class="nova-arte-btn" id="btn-nova-arte" onclick="toggleNovaArte()">
+  <span style="font-size:18px;line-height:1">＋</span>
+  Adicionar nova arte
+</div>
+
+<div class="nova-arte-form" id="nova-arte-form">
+  <div>
+    <label>Nome da arte</label>
+    <input type="text" id="nova-nome" placeholder="ex: Mercado Público" autocomplete="off">
+  </div>
+  <div>
+    <label>Versão</label>
+    <input type="text" id="nova-versao" placeholder="A" style="max-width:80px" autocomplete="off">
+  </div>
+  <div class="nova-arte-acoes">
+    <button class="btn-confirmar" onclick="confirmarNovaArte()">Adicionar</button>
+    <button class="btn-limpar" onclick="cancelarNovaArte()">Cancelar</button>
+  </div>
+</div>
+
+<div style="height:12px"></div>
+
+<div class="secao">Posters · Predinho do Dia</div>
+<div class="lista" id="lista-posters"></div>
+
+<div class="nova-poster-btn" id="btn-novo-poster" onclick="adicionarPoster()">
+  <span style="font-size:18px;line-height:1">＋</span>
+  Adicionar poster
+</div>
+
+<div style="height:12px"></div>
+
+<div class="totais-wrap" id="totais-wrap">
+  <div class="totais-titulo">Totais do pedido</div>
+  <div class="totais-grid">
+    <div class="total-cel"><div class="total-num" id="tot-a6">0</div><div class="total-label">A6</div></div>
+    <div class="total-cel"><div class="total-num" id="tot-a5">0</div><div class="total-label">A5</div></div>
+    <div class="total-cel"><div class="total-num" id="tot-a4">0</div><div class="total-label">A4</div></div>
+    <div class="total-cel"><div class="total-num" id="tot-a3">0</div><div class="total-label">A3</div></div>
+    <div class="total-cel"><div class="total-num" id="tot-a2">0</div><div class="total-label">A2</div></div>
+    <div class="total-cel"><div class="total-num" id="tot-total">0</div><div class="total-label">Total</div></div>
+  </div>
+</div>
+
+<div style="height:16px"></div>
+
+<button class="fab-pdf" id="fab-pdf" onclick="gerarPDF()">Gerar PDF ↓</button>
+
+<script>
+const ARTES = [
+  {nome:'CCMQ', versao:'A'},{nome:'CCMQ', versao:'C'},{nome:'CCMQ', versao:'D'},
+  {nome:'Borges', versao:'A'},{nome:'Jóia', versao:'A'},{nome:'Mercado', versao:'A'},
+  {nome:'Capitólio', versao:'A'},{nome:'Cabaret', versao:'A'},{nome:'Rocco', versao:'A'},
+  {nome:'CAFF', versao:'A'},{nome:'Elaguante', versao:'A'},{nome:'HPS', versao:'A'},
+  {nome:'Travessa V.', versao:'A'},{nome:'Vista PoA', versao:'A'},
+  {nome:'Iberê', versao:'A'},{nome:'Iberê', versao:'B'},
+  {nome:'Catedral', versao:'A'},{nome:'Beco dos Livros', versao:'A'},
+  {nome:'Laçador', versao:'A'},{nome:'Agulha', versao:'A'},
+  {nome:'Planetário', versao:'A'},{nome:'Beira Rio', versao:'A'},
+  {nome:'Gasômetro', versao:'A'},{nome:'Olímpico', versao:'A'},
+  {nome:'Orla', versao:'A'},{nome:'MTST', versao:'A'},
+];
+
+const PAPEIS = ['Canson Matte 200g','Hahnemühle Photo Rag 308g'];
+
+// estado por índice
+let est = {};
+let aberto = null;
+
+function estadoVazio() {
+  return {a6:0,a5:0,a4:0,a3:0,a2:0,papel:'',usoUnico:false,clienteNome:'',clienteArquivo:'',clienteLink:''};
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const hoje = new Date();
+  document.getElementById('topo-data').textContent =
+    hoje.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'}).replace('.',' de').replace('.',' ');
+  const dd = String(hoje.getDate()).padStart(2,'0');
+  const mm = String(hoje.getMonth()+1).padStart(2,'0');
+  document.getElementById('pedido-nome').placeholder = `Reposição ${dd}/${mm}`;
+  ARTES.forEach((_,i) => est[i] = estadoVazio());
+  renderLista();
+  renderPosters();
+});
+
+// ── RENDER LISTA ──
+function renderLista() {
+  const lista = document.getElementById('lista');
+  lista.innerHTML = ARTES.map((arte, i) => renderCard(arte, i)).join('');
+  atualizarTotais();
+}
+
+function renderCard(arte, i) {
+  const e = est[i] || estadoVazio();
+  const total = e.a6+e.a5+e.a4+e.a3+e.a2;
+  const preenchida = total > 0;
+  const isAberta = aberto === i;
+
+  // resumo para linha fechada
+  let resumoParts = [];
+  if (e.a6) resumoParts.push(`${e.a6}×A6`);
+  if (e.a5) resumoParts.push(`${e.a5}×A5`);
+  if (e.a4) resumoParts.push(`${e.a4}×A4`);
+  if (e.a3) resumoParts.push(`${e.a3}×A3`);
+  if (e.a2) resumoParts.push(`${e.a2}×A2`);
+  const resumoQtd = resumoParts.join(' · ');
+  const papelAbrev = e.papel ? (e.papel.length > 18 ? e.papel.slice(0,17)+'…' : e.papel) : '';
+
+  return `
+  <div class="arte-card${preenchida?' preenchida':''}${isAberta?' aberta':''}" id="card-${i}">
+
+    <div class="arte-trigger" onclick="toggleCard(${i})">
+      <div class="trigger-left">
+        <div class="arte-nome">
+          ${arte.nome}
+          <span class="versao-pill">${arte.versao}</span>
+          ${e.usoUnico ? `<span class="uso-badge">uso único</span>` : ''}
+        </div>
+        ${preenchida ? `
+          <div class="arte-resumo">
+            <span class="resumo-qtd">${resumoQtd}</span>
+            ${papelAbrev ? `<span class="resumo-papel">· ${papelAbrev}</span>` : ''}
+          </div>` : `<div class="arte-resumo" style="color:var(--rule)">Toque para preencher</div>`}
+      </div>
+      <div class="trigger-right">
+        <div class="check-icon">${preenchida ? '✓' : ''}</div>
+        <div class="chevron">▾</div>
+      </div>
+    </div>
+
+    <div class="arte-editor">
+      <div class="qtd-label">Quantidades</div>
+      <div class="qtd-grid">
+        ${['a6','a5','a4','a3','a2'].map(tam => `
+          <div class="qtd-field">
+            <label>${tam.toUpperCase()}</label>
+            <div class="stepper">
+              <button class="step-btn" ontouchstart="stepTouch(event,${i},'${tam}',-1)" onclick="step(${i},'${tam}',-1)">−</button>
+              <input class="step-val" type="number" inputmode="numeric" pattern="[0-9]*"
+                     value="${e[tam]||0}" min="0"
+                     id="inp-${i}-${tam}"
+                     onchange="setVal(${i},'${tam}',this.value)"
+                     onfocus="this.select()">
+              <button class="step-btn" ontouchstart="stepTouch(event,${i},'${tam}',1)" onclick="step(${i},'${tam}',1)">+</button>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <div class="papel-label">Papel</div>
+      <div class="papel-opcoes">
+        ${PAPEIS.map((p, pi) => `
+          <div class="papel-opcao${e.papel===p?' selecionado':''}"
+               data-idx="${i}" data-pi="${pi}"
+               onclick="selecionarPapelIdx(this)">
+            <div class="papel-radio"></div>
+            ${p}
+          </div>`).join('')}
+        <div class="papel-opcao${e.papel&&!PAPEIS.includes(e.papel)?' selecionado':''}"
+             data-idx="${i}" data-pi="-1"
+             onclick="selecionarPapelIdx(this)">
+          <div class="papel-radio"></div>
+          Outro papel…
+        </div>
+        <input class="papel-livre${e.papel&&!PAPEIS.includes(e.papel)?' visivel':''}"
+               type="text" placeholder="Especificar papel…"
+               id="papel-livre-${i}"
+               value="${e.papel&&!PAPEIS.includes(e.papel)?e.papel:''}"
+               oninput="est[${i}].papel=this.value;atualizarCard(${i})">
+      </div>
+
+      <div class="uso-unico-row" onclick="toggleUso(${i})">
+        <div>
+          <div class="uso-unico-label">Pedido de cliente específico</div>
+          <div class="uso-unico-sub">Uso único — não repor no estoque</div>
+        </div>
+        <div class="switch${e.usoUnico?' on':''}" id="sw-${i}"></div>
+      </div>
+
+      <div class="uso-unico-campos${e.usoUnico?' visivel':''}" id="uu-${i}">
+        <div class="uu-campo">
+          <label>Nome do cliente</label>
+          <input type="text" value="${e.clienteNome}" placeholder="ex: Maria Fernanda"
+                 oninput="est[${i}].clienteNome=this.value">
+        </div>
+        <div class="uu-campo">
+          <label>Nome do arquivo</label>
+          <input type="text" value="${e.clienteArquivo}" placeholder="arte_alta_cliente.tif"
+                 oninput="est[${i}].clienteArquivo=this.value">
+        </div>
+        <div class="uu-campo">
+          <label>Link Drive</label>
+          <input type="url" value="${e.clienteLink}" placeholder="https://drive.google.com/…"
+                 oninput="est[${i}].clienteLink=this.value">
+        </div>
+      </div>
+
+      <div class="editor-acoes">
+        <button class="btn-confirmar" onclick="fecharCard(${i})">Confirmar ✓</button>
+        <button class="btn-limpar" onclick="limparCard(${i})">Limpar</button>
+      </div>
+    </div>
+
+  </div>`;
+}
+
+// ── INTERAÇÕES ──
+function toggleCard(i) {
+  if (aberto === i) { aberto = null; }
+  else { aberto = i; }
+  renderLista();
+  if (aberto === i) {
+    setTimeout(() => {
+      const card = document.getElementById(`card-${i}`);
+      if (card) card.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 120);
+  }
+}
+
+function fecharCard(i) {
+  aberto = null;
+  renderLista();
+}
+
+function limparCard(i) {
+  est[i] = estadoVazio();
+  renderCard(ARTES[i], i); // re-render parcial via DOM
+  const card = document.getElementById(`card-${i}`);
+  if (card) {
+    card.outerHTML = renderCard(ARTES[i], i);
+    // re-bind do card reconstruído
+    renderLista();
+  }
+}
+
+// stepper
+function step(i, tam, delta) {
+  est[i][tam] = Math.max(0, (est[i][tam]||0) + delta);
+  const inp = document.getElementById(`inp-${i}-${tam}`);
+  if (inp) inp.value = est[i][tam];
+  atualizarCard(i);
+}
+
+// versão touch para evitar duplo disparo
+function stepTouch(e, i, tam, delta) {
+  e.preventDefault();
+  step(i, tam, delta);
+}
+
+function setVal(i, tam, val) {
+  est[i][tam] = Math.max(0, parseInt(val)||0);
+  atualizarCard(i);
+}
+
+function selecionarPapelIdx(el) {
+  const i = parseInt(el.dataset.idx);
+  const pi = parseInt(el.dataset.pi);
+  const livre = document.getElementById(`papel-livre-${i}`);
+  if (pi === -1) {
+    // outro
+    est[i].papel = '';
+    if (livre) { livre.classList.add('visivel'); livre.focus(); }
+  } else {
+    est[i].papel = PAPEIS[pi];
+    if (livre) { livre.classList.remove('visivel'); }
+  }
+  const opcoes = document.querySelectorAll(`#card-${i} .papel-opcao`);
+  opcoes.forEach((op, oi) => {
+    op.classList.toggle('selecionado', parseInt(op.dataset.pi) === pi);
+  });
+  atualizarTotais();
+}
+
+function toggleUso(i) {
+  est[i].usoUnico = !est[i].usoUnico;
+  const sw = document.getElementById(`sw-${i}`);
+  const campos = document.getElementById(`uu-${i}`);
+  if (sw) sw.classList.toggle('on', est[i].usoUnico);
+  if (campos) campos.classList.toggle('visivel', est[i].usoUnico);
+}
+
+// atualiza só o necessário na linha fechada quando valores mudam
+function atualizarCard(i) {
+  const card = document.getElementById(`card-${i}`);
+  if (!card) return;
+  const e = est[i];
+  const total = e.a6+e.a5+e.a4+e.a3+e.a2;
+  card.classList.toggle('preenchida', total > 0);
+  // atualizar resumo
+  let parts = [];
+  if (e.a6) parts.push(`${e.a6}×A6`);
+  if (e.a5) parts.push(`${e.a5}×A5`);
+  if (e.a4) parts.push(`${e.a4}×A4`);
+  if (e.a3) parts.push(`${e.a3}×A3`);
+  if (e.a2) parts.push(`${e.a2}×A2`);
+  const resumoEl = card.querySelector('.arte-resumo');
+  const checkEl = card.querySelector('.check-icon');
+  if (resumoEl) {
+    if (parts.length) {
+      const pAbrev = e.papel ? (e.papel.length > 18 ? e.papel.slice(0,17)+'…' : e.papel) : '';
+      resumoEl.innerHTML = `<span class="resumo-qtd">${parts.join(' · ')}</span>${pAbrev?`<span class="resumo-papel"> · ${pAbrev}</span>`:''}`;
+      resumoEl.style.color = '';
+    } else {
+      resumoEl.innerHTML = `Toque para preencher`;
+      resumoEl.style.color = 'var(--rule)';
+    }
+  }
+  if (checkEl) {
+    checkEl.textContent = total > 0 ? '✓' : '';
+    checkEl.classList.toggle('', total > 0);
+  }
+  atualizarTotais();
+}
+
+function atualizarTotais() {
+  let tA6=0,tA5=0,tA4=0,tA3=0,tA2=0;
+  Object.values(est).forEach(e => { tA6+=e.a6||0; tA5+=e.a5||0; tA4+=e.a4||0; tA3+=e.a3||0; tA2+=e.a2||0; });
+  const totalArtes = tA6+tA5+tA4+tA3+tA2;
+  const totalPosters = posters.reduce((s,p) => s+(p.a3||0)+(p.a2||0)+(p.a1||0), 0);
+  const total = totalArtes + totalPosters;
+  const itensArtes = Object.values(est).filter(e=>(e.a6+e.a5+e.a4+e.a3+e.a2)>0).length;
+  const itensPosters = posters.filter(p=>(p.a3||0)+(p.a2||0)+(p.a1||0)>0).length;
+  const itens = itensArtes + itensPosters;
+
+  document.getElementById('tot-a6').textContent = tA6;
+  document.getElementById('tot-a5').textContent = tA5;
+  document.getElementById('tot-a4').textContent = tA4;
+  document.getElementById('tot-a3').textContent = tA3;
+  document.getElementById('tot-a2').textContent = tA2;
+  document.getElementById('tot-total').textContent = total;
+
+  document.getElementById('totais-wrap').classList.toggle('visivel', total > 0);
+  document.getElementById('fab-pdf').classList.toggle('visivel', total > 0);
+
+  const ctr = document.getElementById('topo-contador');
+  if (total > 0) {
+    ctr.innerHTML = `<strong>${total}</strong> prints · ${itens} item${itens!==1?'s':''}`;
+    ctr.style.display = 'block';
+  } else {
+    ctr.style.display = 'none';
+  }
+}
+
+// ── NOVA ARTE ──
+function toggleNovaArte() {
+  const form = document.getElementById('nova-arte-form');
+  form.classList.toggle('aberta');
+  if (form.classList.contains('aberta')) {
+    document.getElementById('nova-nome').focus();
+    document.getElementById('btn-nova-arte').style.display = 'none';
+  }
+}
+
+function confirmarNovaArte() {
+  const nome = document.getElementById('nova-nome').value.trim();
+  const versao = document.getElementById('nova-versao').value.trim() || 'A';
+  if (!nome) { document.getElementById('nova-nome').focus(); return; }
+  const idx = ARTES.length;
+  ARTES.push({nome, versao});
+  est[idx] = estadoVazio();
+  document.getElementById('nova-nome').value = '';
+  document.getElementById('nova-versao').value = '';
+  document.getElementById('nova-arte-form').classList.remove('aberta');
+  document.getElementById('btn-nova-arte').style.display = 'flex';
+  aberto = idx;
+  renderLista();
+  setTimeout(() => {
+    const card = document.getElementById(`card-${idx}`);
+    if (card) card.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 100);
+}
+
+function cancelarNovaArte() {
+  document.getElementById('nova-nome').value = '';
+  document.getElementById('nova-arte-form').classList.remove('aberta');
+  document.getElementById('btn-nova-arte').style.display = 'flex';
+}
+
+// ── POSTERS ──
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+let posters = []; // [{id, mes, variante, a3, a2, a1}]
+let posterAberto = null;
+
+function adicionarPoster() {
+  const id = Date.now();
+  posters.push({id, mes: null, variante: null, a3:0, a2:0, a1:0});
+  posterAberto = id;
+  renderPosters();
+  setTimeout(() => {
+    const card = document.getElementById(`poster-${id}`);
+    if (card) card.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 100);
+}
+
+function renderPosters() {
+  const lista = document.getElementById('lista-posters');
+  lista.innerHTML = posters.map(p => renderPosterCard(p)).join('');
+  atualizarTotais();
+}
+
+function renderPosterCard(p) {
+  const aberta = posterAberto === p.id;
+  const mesNome = p.mes !== null ? MESES[p.mes] : null;
+  const totalPoster = (p.a3||0)+(p.a2||0)+(p.a1||0);
+  const preenchida = mesNome && p.variante && totalPoster > 0;
+
+  let resumo = 'Toque para configurar';
+  if (mesNome && p.variante) {
+    const varLabel = p.variante === 'com' ? 'c/ endereços' : 's/ endereços';
+    let qtdParts = [];
+    if (p.a3) qtdParts.push(`${p.a3}×A3`);
+    if (p.a2) qtdParts.push(`${p.a2}×A2`);
+    if (p.a1) qtdParts.push(`${p.a1}×A1`);
+    resumo = `${mesNome} · ${varLabel}${qtdParts.length ? ' · ' + qtdParts.join(' · ') : ''}`;
+  } else if (mesNome) {
+    resumo = `${mesNome} · escolha a variante`;
+  }
+
+  return `
+  <div class="poster-card${preenchida?' preenchida':''}${aberta?' aberta':''}" id="poster-${p.id}">
+    <div class="poster-trigger" onclick="togglePoster(${p.id})">
+      <div>
+        <div class="poster-nome">
+          Predinho do Dia
+          ${mesNome ? `<span class="poster-variante-pill">${mesNome}</span>` : ''}
+          ${p.variante ? `<span class="poster-variante-pill ${p.variante}">${p.variante === 'com' ? 'c/ endereços' : 's/ endereços'}</span>` : ''}
+        </div>
+        <div class="poster-resumo${preenchida?' ok':''}">${resumo}</div>
+      </div>
+      <div class="trigger-right">
+        <div class="check-icon">${preenchida ? '✓' : ''}</div>
+        <div class="chevron">▾</div>
+      </div>
+    </div>
+
+    <div class="poster-editor">
+      <div class="mes-label">Mês</div>
+      <div class="mes-grid">
+        ${MESES.map((m, mi) => `
+          <button class="mes-btn${p.mes===mi?' selecionado':''}"
+                  onclick="setPosterMes(${p.id},${mi})">${m}</button>
+        `).join('')}
+      </div>
+
+      <div class="variante-label">Variante</div>
+      <div class="variante-row">
+        <button class="variante-btn${p.variante==='com'?' selecionado com':''}"
+                onclick="setPosterVariante(${p.id},'com')">
+          Com endereços
+          <small>logradouro impresso</small>
+        </button>
+        <button class="variante-btn${p.variante==='sem'?' selecionado':''}"
+                onclick="setPosterVariante(${p.id},'sem')">
+          Sem endereços
+          <small>somente arte</small>
+        </button>
+      </div>
+
+      <div class="qtd-label">Quantidades</div>
+      <div class="qtd-grid" style="grid-template-columns:repeat(3,1fr)">
+        ${['a3','a2','a1'].map(tam => `
+          <div class="qtd-field">
+            <label>${tam.toUpperCase()}</label>
+            <div class="stepper">
+              <button class="step-btn" ontouchstart="stepPosterTamTouch(event,${p.id},'${tam}',-1)" onclick="stepPosterTam(${p.id},'${tam}',-1)">−</button>
+              <input class="step-val" type="number" inputmode="numeric" pattern="[0-9]*"
+                     value="${p[tam]||0}" min="0" id="ptam-${p.id}-${tam}"
+                     onchange="setPosterTam(${p.id},'${tam}',this.value)"
+                     onfocus="this.select()">
+              <button class="step-btn" ontouchstart="stepPosterTamTouch(event,${p.id},'${tam}',1)" onclick="stepPosterTam(${p.id},'${tam}',1)">+</button>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <div class="editor-acoes">
+        <button class="btn-confirmar" onclick="fecharPoster(${p.id})">Confirmar ✓</button>
+        <button class="btn-remover-poster" onclick="removerPoster(${p.id})">Remover poster</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function togglePoster(id) {
+  posterAberto = posterAberto === id ? null : id;
+  renderPosters();
+}
+
+function fecharPoster(id) {
+  posterAberto = null;
+  renderPosters();
+}
+
+function removerPoster(id) {
+  posters = posters.filter(p => p.id !== id);
+  if (posterAberto === id) posterAberto = null;
+  renderPosters();
+}
+
+function setPosterMes(id, mi) {
+  const p = posters.find(p => p.id === id);
+  if (p) { p.mes = mi; renderPosters(); }
+}
+
+function setPosterVariante(id, v) {
+  const p = posters.find(p => p.id === id);
+  if (p) { p.variante = v; renderPosters(); }
+}
+
+function stepPosterTam(id, tam, delta) {
+  const p = posters.find(p => p.id === id);
+  if (!p) return;
+  p[tam] = Math.max(0, (p[tam]||0) + delta);
+  const inp = document.getElementById(`ptam-${id}-${tam}`);
+  if (inp) inp.value = p[tam];
+  atualizarTotais();
+}
+
+function stepPosterTamTouch(e, id, tam, delta) {
+  e.preventDefault();
+  stepPosterTam(id, tam, delta);
+}
+
+function setPosterTam(id, tam, val) {
+  const p = posters.find(p => p.id === id);
+  if (p) { p[tam] = Math.max(0, parseInt(val)||0); atualizarTotais(); }
+}
+
+function gerarPDF() { window.print(); }
+</script>
+</body>
+</html>
