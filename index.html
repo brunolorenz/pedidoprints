@@ -2,1503 +2,769 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1c1814">
 <title>Pedido · Uns Predinhos</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap');
-
-:root {
-  --cream: #f7f3ec;
-  --white: #ffffff;
-  --ink: #1c1814;
-  --mid: #8a7f74;
-  --rule: #e0d8ce;
-  --accent: #bf4a22;
-  --accent-bg: #fdf0eb;
-  --accent-border: #e8c4b4;
-  --green: #2a6049;
-  --green-bg: #eaf3ee;
-  --green-border: #b8d9c8;
-  --tag-bg: #f0e5d0;
-  --tag-ink: #7a5c20;
-  --serif: 'Instrument Serif', Georgia, serif;
-  --sans: 'Instrument Sans', system-ui, sans-serif;
-  --radius: 12px;
-  --radius-sm: 8px;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-html {
-  font-size: 16px;
-  background: var(--cream);
-  overscroll-behavior: none;
-  overflow-x: hidden;
-}
-
-body {
-  font-family: var(--sans);
-  color: var(--ink);
-  min-height: 100dvh;
-  padding-bottom: 100px;
-  overflow-x: hidden;
-}
-
-/* ─── TOPO ─── */
-.topo {
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  background: var(--ink);
-  color: white;
-  padding: 14px 16px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.topo-logo {
-  font-family: var(--serif);
-  font-size: 20px;
-  font-style: italic;
-  color: white;
-  line-height: 1;
-}
-
-.topo-meta {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.topo-data {
-  font-size: 11px;
-  color: rgba(255,255,255,0.45);
-  letter-spacing: 0.02em;
-}
-
-.topo-contador {
-  font-size: 12px;
-  color: rgba(255,255,255,0.75);
-  font-weight: 500;
-}
-.topo-contador strong { color: #f09070; }
-
-/* ─── NOME DO PEDIDO ─── */
-.pedido-nome-wrap {
-  padding: 14px 16px 10px;
-  background: var(--white);
-  border-bottom: 1px solid var(--rule);
-}
-
-.pedido-nome-label {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--mid);
-  margin-bottom: 5px;
-}
-
-.pedido-nome {
-  width: 100%;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 22px;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: var(--ink);
-  -webkit-appearance: none;
-}
-.pedido-nome::placeholder { color: var(--rule); }
-
-/* ─── SEÇÃO ─── */
-.secao {
-  padding: 10px 16px 4px;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--mid);
-  background: var(--cream);
-}
-
-/* ─── LISTA DE ARTES ─── */
-.lista {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  background: var(--white);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-
-/* ─── CARD DE ARTE ─── */
-.arte-card {
-  border-bottom: 1px solid var(--rule);
-  background: var(--white);
-  transition: background 0.1s;
-  position: relative;
-}
-.arte-card:last-child { border-bottom: none; }
-
-/* estado: preenchida */
-.arte-card.preenchida { background: var(--white); }
-.arte-card.preenchida .arte-trigger { border-left: 3px solid var(--green); padding-left: 13px; }
-
-/* estado: aberta */
-.arte-card.aberta .arte-trigger { background: var(--accent-bg); border-left: 3px solid var(--accent); padding-left: 13px; }
-
-/* ── trigger (toque para abrir) ── */
-.arte-trigger {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: 14px 16px;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-  min-height: 60px;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.1s;
-}
-.arte-trigger:active { background: #f5ede8; }
-
-.trigger-left { display: flex; flex-direction: column; gap: 3px; }
-
-.arte-nome {
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.2;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.versao-pill {
-  font-size: 9px;
-  color: var(--mid);
-  background: var(--cream);
-  border: 1px solid var(--rule);
-  padding: 2px 6px;
-  border-radius: 10px;
-  font-weight: 400;
-}
-
-.arte-resumo {
-  font-size: 12px;
-  color: var(--mid);
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.resumo-qtd {
-  color: var(--green);
-  font-weight: 600;
-}
-
-.resumo-papel {
-  color: var(--mid);
-}
-
-.uso-badge {
-  font-size: 9px;
-  background: var(--tag-bg);
-  color: var(--tag-ink);
-  padding: 2px 6px;
-  border-radius: 10px;
-  border: 1px solid #d4b8ae;
-}
-
-.trigger-right {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.check-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1.5px solid var(--rule);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  color: transparent;
-  flex-shrink: 0;
-  transition: all 0.15s;
-}
-.preenchida .check-icon {
-  background: var(--green);
-  border-color: var(--green);
-  color: white;
-}
-
-.chevron {
-  font-size: 12px;
-  color: var(--mid);
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
-.aberta .chevron { transform: rotate(180deg); }
-
-/* ── painel de edição ── */
-.arte-editor {
-  display: none;
-  padding: 0 14px 16px;
-  background: var(--accent-bg);
-  border-top: 1px solid var(--accent-border);
-  flex-direction: column;
-  gap: 14px;
-  animation: slideDown 0.18s ease;
-  overflow: hidden;
-  width: 100%;
-  box-sizing: border-box;
-}
-.arte-card.aberta .arte-editor { display: flex; }
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── quantidades ── */
-.qtd-label {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 600;
-  padding-top: 14px;
-}
-
-.qtd-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-}
-
-.qtd-field {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.qtd-field label {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 500;
-}
-
-/* stepper: − número + */
-.stepper {
-  display: flex;
-  align-items: center;
-  background: var(--white);
-  border: 1.5px solid var(--accent-border);
-  border-radius: 10px;
-  overflow: hidden;
-  width: 100%;
-  min-width: 0;
-}
-
-.step-btn {
-  flex: 0 0 28px;
-  width: 28px;
-  height: 44px;
-  border: none;
-  background: none;
-  font-size: 18px;
-  color: var(--accent);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.1s;
-}
-.step-btn:active { background: var(--accent-bg); }
-
-.step-val {
-  flex: 1 1 0;
-  min-width: 0;
-  height: 44px;
-  border: none;
-  background: transparent;
-  text-align: center;
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-  outline: none;
-  -webkit-appearance: none;
-  padding: 0;
-  width: 100%;
-}
-.step-val::-webkit-inner-spin-button,
-.step-val::-webkit-outer-spin-button { -webkit-appearance: none; }
-
-/* ── papel ── */
-.papel-label {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.papel-opcoes {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.papel-opcao {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 13px;
-  background: var(--white);
-  border: 1.5px solid var(--accent-border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.12s;
-  -webkit-tap-highlight-color: transparent;
-}
-.papel-opcao.selecionado {
-  border-color: var(--accent);
-  background: white;
-}
-.papel-radio {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid var(--accent-border);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.12s;
-}
-.papel-opcao.selecionado .papel-radio {
-  border-color: var(--accent);
-  background: var(--accent);
-}
-.papel-opcao.selecionado .papel-radio::after {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: white;
-}
-
-.papel-livre {
-  width: 100%;
-  padding: 11px 13px;
-  background: var(--white);
-  border: 1.5px solid var(--accent-border);
-  border-radius: var(--radius-sm);
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--ink);
-  outline: none;
-  -webkit-appearance: none;
-  display: none;
-}
-.papel-livre.visivel { display: block; }
-.papel-livre:focus { border-color: var(--accent); }
-
-/* ── toggle uso único ── */
-.uso-unico-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  background: var(--white);
-  border: 1.5px solid var(--accent-border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.uso-unico-label { font-size: 13px; color: var(--ink); }
-.uso-unico-sub { font-size: 11px; color: var(--mid); margin-top: 1px; }
-
-.switch {
-  width: 44px; height: 26px;
-  background: var(--rule);
-  border-radius: 13px;
-  position: relative;
-  flex-shrink: 0;
-  transition: background 0.2s;
-}
-.switch.on { background: var(--accent); }
-.switch::after {
-  content: '';
-  width: 20px; height: 20px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 3px; left: 3px;
-  transition: left 0.2s;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.switch.on::after { left: 21px; }
-
-.uso-unico-campos {
-  display: none;
-  flex-direction: column;
-  gap: 8px;
-  background: var(--tag-bg);
-  border-radius: var(--radius-sm);
-  padding: 12px;
-  border: 1px solid #d4b8ae;
-}
-.uso-unico-campos.visivel { display: flex; }
-
-.uu-campo label {
-  display: block;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tag-ink);
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-.uu-campo input {
-  width: 100%;
-  padding: 10px 12px;
-  background: white;
-  border: 1px solid #d4b8ae;
-  border-radius: 8px;
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--ink);
-  outline: none;
-  -webkit-appearance: none;
-}
-.uu-campo input:focus { border-color: var(--tag-ink); }
-
-/* ── ações do editor ── */
-.editor-acoes {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-confirmar {
-  flex: 1;
-  padding: 14px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: opacity 0.1s;
-}
-.btn-confirmar:active { opacity: 0.85; }
-
-.btn-limpar {
-  padding: 14px 16px;
-  background: none;
-  border: 1.5px solid var(--accent-border);
-  border-radius: var(--radius-sm);
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--mid);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  white-space: nowrap;
-}
-.btn-limpar:active { background: var(--cream); }
-
-/* ─── NOVA ARTE ─── */
-.nova-arte-btn {
-  margin: 12px 16px;
-  padding: 14px 16px;
-  background: var(--white);
-  border: 1.5px dashed var(--rule);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  color: var(--mid);
-  font-size: 13px;
-  -webkit-tap-highlight-color: transparent;
-  transition: border-color 0.15s, color 0.15s;
-}
-.nova-arte-btn:active { border-color: var(--accent); color: var(--accent); }
-
-.nova-arte-form {
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0 16px 12px;
-  padding: 14px;
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-}
-.nova-arte-form.aberta { display: flex; }
-
-.nova-arte-form label {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--mid);
-  margin-bottom: 4px;
-  display: block;
-}
-
-.nova-arte-form input {
-  width: 100%;
-  padding: 11px 13px;
-  background: var(--cream);
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  font-family: var(--sans);
-  font-size: 15px;
-  color: var(--ink);
-  outline: none;
-  -webkit-appearance: none;
-}
-.nova-arte-form input:focus { border-color: var(--accent); background: white; }
-
-.nova-arte-acoes { display: flex; gap: 8px; }
-.nova-arte-acoes .btn-confirmar { padding: 12px; font-size: 13px; }
-.nova-arte-acoes .btn-limpar { padding: 12px; }
-
-/* ─── TOTAIS ─── */
-.totais-wrap {
-  margin: 0 16px;
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  overflow: hidden;
-  display: none;
-}
-.totais-wrap.visivel { display: block; }
-
-.totais-titulo {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--mid);
-  padding: 10px 16px 6px;
-  border-bottom: 1px solid var(--rule);
-}
-
-.totais-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-}
-
-.total-cel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px 4px;
-  border-right: 1px solid var(--rule);
-  gap: 3px;
-}
-.total-cel:last-child { border-right: none; }
-
-.total-num {
-  font-family: var(--serif);
-  font-size: 24px;
-  line-height: 1;
-  color: var(--accent);
-}
-.total-label {
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--mid);
-}
-
-/* ─── BOTÃO FLUTUANTE PDF ─── */
-.fab-pdf {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 300;
-  background: var(--ink);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  padding: 16px 32px;
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(28,24,20,0.35);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s, background 0.2s;
-  white-space: nowrap;
-  min-width: 200px;
-  text-align: center;
-  -webkit-tap-highlight-color: transparent;
-}
-.fab-pdf.visivel {
-  opacity: 1;
-  pointer-events: auto;
-}
-.fab-pdf:active { background: var(--accent); transform: translateX(-50%) scale(0.97); }
-
-/* ─── POSTERS ─── */
-.nova-poster-btn {
-  margin: 0 0 0;
-  padding: 14px 16px;
-  background: var(--white);
-  border-top: 1px dashed var(--rule);
-  border-bottom: 1px dashed var(--rule);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  color: var(--mid);
-  font-size: 13px;
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.15s;
-}
-.nova-poster-btn:active { color: var(--accent); }
-
-/* card de poster — mais simples que arte, sem versão */
-.poster-card {
-  border-bottom: 1px solid var(--rule);
-  background: var(--white);
-  position: relative;
-}
-.poster-card:last-child { border-bottom: none; }
-
-.poster-card.preenchida .poster-trigger { border-left: 3px solid var(--green); padding-left: 13px; }
-.poster-card.aberta .poster-trigger { background: var(--accent-bg); border-left: 3px solid var(--accent); padding-left: 13px; }
-
-.poster-trigger {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: 14px 16px;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-  min-height: 60px;
-  -webkit-tap-highlight-color: transparent;
-}
-.poster-trigger:active { background: #f5ede8; }
-
-.poster-nome {
-  font-size: 15px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.poster-variante-pill {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  border: 1px solid var(--rule);
-  font-weight: 400;
-}
-.poster-variante-pill.com { background: #e8f0e8; color: #2a6049; border-color: #b8d9c8; }
-.poster-variante-pill.sem { background: #f0e8e8; color: #7a2a2a; border-color: #d9b8b8; }
-
-.poster-resumo { font-size: 12px; color: var(--mid); margin-top: 2px; }
-.poster-resumo.ok { color: var(--green); font-weight: 600; }
-
-.poster-editor {
-  display: none;
-  padding: 0 14px 16px;
-  background: var(--accent-bg);
-  border-top: 1px solid var(--accent-border);
-  flex-direction: column;
-  gap: 14px;
-  overflow: hidden;
-  animation: slideDown 0.18s ease;
-}
-.poster-card.aberta .poster-editor { display: flex; }
-
-/* mês selector */
-.mes-label {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 600;
-  padding-top: 14px;
-}
-
-.mes-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-
-.mes-btn {
-  padding: 10px 4px;
-  background: var(--white);
-  border: 1.5px solid var(--accent-border);
-  border-radius: 8px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink);
-  cursor: pointer;
-  text-align: center;
-  -webkit-tap-highlight-color: transparent;
-  transition: all 0.12s;
-  line-height: 1.2;
-}
-.mes-btn:active { background: var(--accent-bg); }
-.mes-btn.selecionado {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
-
-/* variante com/sem endereços */
-.variante-label {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.variante-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.variante-btn {
-  padding: 12px 8px;
-  background: var(--white);
-  border: 1.5px solid var(--accent-border);
-  border-radius: 8px;
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink);
-  cursor: pointer;
-  text-align: center;
-  -webkit-tap-highlight-color: transparent;
-  transition: all 0.12s;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  align-items: center;
-}
-.variante-btn small { font-size: 10px; color: var(--mid); font-weight: 400; }
-.variante-btn:active { background: var(--accent-bg); }
-.variante-btn.selecionado {
-  border-color: var(--accent);
-  background: var(--accent-bg);
-}
-.variante-btn.selecionado.com { border-color: var(--green); background: var(--green-bg); }
-
-/* qtd poster — stepper único */
-.poster-qtd-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.poster-qtd-label {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 600;
-  flex-shrink: 0;
-}
-.poster-qtd-wrap .stepper { max-width: 140px; }
-
-/* remover poster */
-.btn-remover-poster {
-  background: none;
-  border: 1px solid var(--accent-border);
-  border-radius: 8px;
-  padding: 10px;
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--mid);
-  cursor: pointer;
-  width: 100%;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn-remover-poster:active { color: var(--accent); border-color: var(--accent); }
-
-/* ─── PRINT — posters ─── */
-@media print {
-  .poster-card:not(.preenchida) { display: none; }
-  .nova-poster-btn { display: none !important; }
-  .poster-editor { display: none !important; }
-}
-@media print {
-  @page { margin: 14mm 12mm; size: A4; }
-  .topo { background: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .fab-pdf, .nova-arte-btn, .nova-arte-form, .arte-editor,
-  .btn-limpar, .btn-confirmar { display: none !important; }
-  body { padding-bottom: 0; }
-  .arte-card:not(.preenchida) { display: none; }
-  .arte-trigger { border-left: none !important; padding-left: 16px !important; }
-  .arte-trigger:active { background: white; }
-  .totais-wrap { display: block !important; border: 1px solid #ccc; margin: 12px 0 0; }
-  .secao { display: none; }
-  .pedido-nome-wrap { border-bottom: 1px solid #ccc; }
-}
-
-/* ─── DESKTOP ─── */
-@media (min-width: 600px) {
-  body { max-width: 520px; margin: 0 auto; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); min-height: 100vh; }
-  .qtd-grid { gap: 12px; }
-}
+:root{--cream:#f7f3ec;--white:#fff;--ink:#1c1814;--mid:#6f655b;--rule:#d9d0c4;--accent:#b8421c;--accent-bg:#fdf0eb;--accent-border:#e0b4a2;--green:#2a6049;--green-bg:#eaf3ee;--green-border:#b8d9c8;--tag-bg:#f0e5d0;--tag-ink:#7a5c20;--danger:#9b2c2c;--serif:'Instrument Serif',Georgia,serif;--sans:'Instrument Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--cream);overscroll-behavior:none;overflow-x:hidden}
+body{font-family:var(--sans);color:var(--ink);min-height:100dvh;padding-bottom:110px;overflow-x:hidden;font-size:15px}
+@media(min-width:600px){body{max-width:520px;margin:0 auto;border-left:1px solid var(--rule);border-right:1px solid var(--rule);min-height:100vh}}
+button,select,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;text-align:left}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hide{display:none!important}
+
+/* topo */
+.topo{position:sticky;top:0;z-index:200;background:var(--ink);color:#fff;padding:14px 16px 12px;display:flex;align-items:center;justify-content:space-between}
+.topo-logo{font-family:var(--serif);font-size:20px;font-style:italic}
+.topo-meta{text-align:right;display:flex;flex-direction:column;gap:2px}
+.topo-data{font-size:12px;color:rgba(255,255,255,.75)}
+.topo-contador{font-size:12px;font-weight:500;display:none}
+.topo-contador strong{color:#f4a383}
+
+/* blocos e campos */
+.bloco{background:var(--white);border-bottom:1px solid var(--rule);padding:14px 16px}
+.rotulo{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin-bottom:6px}
+.rotulo.acento{color:var(--accent);font-weight:600;margin-top:4px}
+.campo{width:100%;padding:11px 12px;background:var(--cream);border:1px solid var(--rule);border-radius:8px;font-size:15px;outline:none;-webkit-appearance:none;appearance:none}
+.campo:focus{border-color:var(--accent);background:#fff}
+.campo-nome{font-family:var(--serif);font-style:italic;font-size:22px;background:transparent;border:0;border-bottom:1px solid var(--rule);border-radius:0;padding:4px 0}
+.campo-nome:focus{border-bottom-color:var(--accent);background:transparent}
+.campo::placeholder{color:var(--mid);opacity:.85}
+.linha-acoes{display:flex;gap:8px;margin-top:14px}
+.linha-acoes .btn-sec{flex:1}
+.acoes{display:flex;gap:8px;flex-wrap:wrap}
+
+/* seções */
+.secao{padding:16px 16px 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);display:flex;justify-content:space-between;align-items:center}
+.lista{display:flex;flex-direction:column;background:var(--white);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.vazio-lista{padding:20px 16px;color:var(--mid);text-align:center;background:#fff}
+
+/* cards (artes e posters) */
+.arte-card{border-bottom:1px solid var(--rule);background:var(--white);position:relative}
+.arte-card:last-child{border-bottom:0}
+.arte-trigger{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;min-height:60px;border-left:3px solid transparent}
+.arte-trigger:active{background:#f5ede8}
+.arte-card.preenchida .arte-trigger{border-left-color:var(--green)}
+.arte-card.aberta .arte-trigger{background:var(--accent-bg);border-left-color:var(--accent)}
+.trig-esq{display:flex;flex-direction:column;gap:3px;min-width:0}
+.arte-nome{font-size:15px;font-weight:500;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.pill,.badge{font-size:11px;padding:2px 7px;border-radius:10px;font-weight:400}
+.pill{color:var(--mid);background:var(--cream);border:1px solid var(--rule)}
+.badge{background:var(--tag-bg);color:var(--tag-ink);border:1px solid #d4b8ae}
+.arte-resumo{font-size:13px;color:var(--mid)}
+.arte-resumo .qtd{color:var(--green);font-weight:600}
+.arte-resumo .aviso{color:var(--accent);font-weight:500}
+.trig-dir{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.arte-card.preenchida .check{background:var(--green);border-color:var(--green)}
+.seta{color:var(--mid);transition:transform .2s}
+.aberta .seta{transform:rotate(180deg)}
+.arte-editor{display:none;padding:4px 14px 16px;background:var(--accent-bg);border-top:1px solid var(--accent-border);flex-direction:column;gap:12px}
+.aberta .arte-editor{display:flex}
+
+/* quantidades */
+.qtd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.qtd-lbl{font-size:11px;letter-spacing:.08em;color:var(--accent);font-weight:600;display:block;margin-bottom:4px}
+.stepper{display:flex;align-items:center;background:#fff;border:1.5px solid var(--accent-border);border-radius:10px;overflow:hidden}
+.step-btn{flex:0 0 38px;height:44px;font-size:20px;color:var(--accent);display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.step-btn:active{background:var(--accent-bg)}
+.step-val{flex:1;min-width:0;width:100%;height:44px;border:0;background:transparent;text-align:center;font-size:16px;font-weight:600;outline:none;-moz-appearance:textfield;appearance:textfield}
+.step-val::-webkit-inner-spin-button,.step-val::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+
+/* uso único */
+.switch-linha{display:flex;width:100%;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;background:#fff;border:1.5px solid var(--accent-border);border-radius:8px}
+.uso-lbl{display:block;font-size:14px}
+.uso-sub{display:block;font-size:12px;color:var(--mid);margin-top:2px}
+.switch{width:44px;height:26px;background:var(--rule);border-radius:13px;position:relative;flex-shrink:0;transition:background .2s}
+.switch.on{background:var(--accent)}
+.switch::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s}
+.switch.on::after{left:21px}
+.uu{display:flex;flex-direction:column;gap:8px;background:var(--tag-bg);border:1px solid #d4b8ae;border-radius:8px;padding:12px}
+.uu label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tag-ink);display:block;margin-bottom:4px}
+
+/* botões */
+.btn-primario{flex:1;min-width:120px;padding:14px;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;text-align:center}
+.btn-primario:disabled{opacity:.45}
+.btn-primario:active{opacity:.85}
+.btn-sec{padding:12px 14px;border:1.5px solid var(--accent-border);border-radius:8px;font-size:14px;color:var(--ink);background:#fff;text-align:center}
+.btn-sec:active{background:var(--cream)}
+.btn-sec.perigo{color:var(--danger)}
+.dashed{display:flex;align-items:center;gap:10px;width:calc(100% - 32px);margin:12px 16px;padding:14px 16px;background:#fff;border:1.5px dashed #bfb4a6;border-radius:12px;color:var(--mid);font-size:14px}
+
+/* posters */
+.mes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.mes-btn{padding:10px 4px;background:#fff;border:1.5px solid var(--accent-border);border-radius:8px;font-size:13px;text-align:center}
+.mes-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.variante-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.var-btn{padding:12px 8px;background:#fff;border:1.5px solid var(--accent-border);border-radius:8px;text-align:center;font-weight:500;display:flex;flex-direction:column;gap:3px;align-items:center}
+.var-btn small{font-size:12px;color:var(--mid);font-weight:400}
+.var-btn[aria-pressed="true"]{border-color:var(--green);background:var(--green-bg)}
+
+/* nova arte */
+.nova-form{display:none;flex-direction:column;gap:10px;margin:12px 16px;padding:14px;background:#fff;border:1px solid var(--rule);border-radius:12px}
+.nova-form.aberta{display:flex}
+
+/* totais */
+.totais{margin:16px 16px 0;background:#fff;border:1px solid var(--rule);border-radius:12px;overflow:hidden;display:none}
+.totais.visivel{display:block}
+.totais-titulo{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);padding:10px 16px 6px;border-bottom:1px solid var(--rule)}
+.totais-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.tc{display:flex;flex-direction:column;align-items:center;padding:12px 2px;border-right:1px solid var(--rule);gap:3px}
+.tc:last-child{border-right:0}
+.tc .n{font-family:var(--serif);font-size:24px;line-height:1;color:var(--accent)}
+.tc .l{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--mid)}
+.tc.total .n{color:var(--ink)}
+
+/* botão flutuante */
+.fab{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:300;background:var(--ink);color:#fff;border-radius:30px;padding:16px 28px;font-weight:600;box-shadow:0 4px 20px rgba(28,24,20,.35);opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap}
+.fab.visivel{opacity:1;pointer-events:auto}
+
+/* revisão (folha inferior) */
+dialog{border:0;border-radius:16px 16px 0 0;padding:0;width:min(520px,100%);margin:auto auto 0;background:var(--cream);color:var(--ink);max-height:88dvh}
+dialog::backdrop{background:rgba(28,24,20,.5)}
+.dlg{padding:18px 16px 24px;display:flex;flex-direction:column;gap:12px;overflow:auto}
+.dlg h2{font-family:var(--serif);font-weight:400;font-size:26px}
+.msg{white-space:pre-wrap;background:#fff;border:1px solid var(--rule);border-radius:10px;padding:12px;font-family:var(--sans);font-size:13px;line-height:1.45;max-height:40dvh;overflow:auto}
+.erros{background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:10px;padding:12px 14px;color:var(--danger);font-size:14px}
+.erros ul{padding-left:18px}
+.erros li{margin:3px 0}
 </style>
 </head>
 <body>
+<style>
+.gaveta{margin-top:14px}
+.gaveta>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#fff;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid)}
+.gaveta>summary::-webkit-details-marker{display:none}
+.gaveta>summary::after{content:'▾';margin-left:8px;transition:transform .2s}
+.gaveta[open]>summary::after{transform:rotate(180deg)}
+.custo-linha{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--rule);font-size:14px}
+.custo-linha strong{font-family:var(--serif);font-weight:400;font-size:24px;color:var(--ink)}
+.custo-nota{font-size:12px;color:var(--mid);padding:0 16px 12px}
+.arte-editor .custo-nota{padding:0}
+.custo{font-weight:500;color:var(--ink)}
+</style>
 
-<div class="topo">
+<header class="topo">
   <div class="topo-logo">Uns Predinhos</div>
   <div class="topo-meta">
     <div class="topo-data" id="topo-data"></div>
-    <div class="topo-contador" id="topo-contador" style="display:none"></div>
+    <div class="topo-contador" id="topo-contador" aria-live="polite"></div>
   </div>
-</div>
+</header>
 
-<div class="pedido-nome-wrap">
-  <div class="pedido-nome-label">Nome do pedido</div>
-  <input class="pedido-nome" id="pedido-nome" type="text" placeholder="ex: Reposição maio…" spellcheck="false">
-</div>
+<section class="bloco">
+  <label class="rotulo" for="nome-pedido">Nome do pedido</label>
+  <input class="campo campo-nome" id="nome-pedido" type="text" autocomplete="off" spellcheck="false">
+  <div class="linha-acoes">
+    <button class="btn-sec hide" id="btn-repetir" data-acao="repetir">Repetir último pedido</button>
+    <button class="btn-sec" data-acao="novo">Novo pedido</button>
+  </div>
+</section>
 
-<div class="secao">Artes</div>
-<div class="lista" id="lista"></div>
+<div class="secao"><span>Pedidos únicos</span><span id="contagem-unicas"></span></div>
+<div class="lista" id="lista-unicas"></div>
 
-<div class="nova-arte-btn" id="btn-nova-arte" onclick="toggleNovaArte()">
-  <span style="font-size:18px;line-height:1">＋</span>
-  Adicionar nova arte
-</div>
-
-<div class="nova-arte-form" id="nova-arte-form">
+<button class="dashed" data-acao="nova-abrir">＋ Nova arte (pedido único)</button>
+<div class="nova-form" id="nova-form">
   <div>
-    <label>Nome da arte</label>
-    <input type="text" id="nova-nome" placeholder="ex: Mercado Público" autocomplete="off">
+    <label class="rotulo" for="nova-nome">Nome da arte</label>
+    <input class="campo" id="nova-nome" type="text" placeholder="ex: Mercado Público" autocomplete="off">
   </div>
   <div>
-    <label>Versão</label>
-    <input type="text" id="nova-versao" placeholder="A" style="max-width:80px" autocomplete="off">
+    <label class="rotulo" for="nova-versao">Versão</label>
+    <input class="campo" id="nova-versao" type="text" placeholder="A" style="max-width:100px" autocomplete="off">
   </div>
-  <div class="nova-arte-acoes">
-    <button class="btn-confirmar" onclick="confirmarNovaArte()">Adicionar</button>
-    <button class="btn-limpar" onclick="cancelarNovaArte()">Cancelar</button>
+  <div class="acoes">
+    <button class="btn-primario" data-acao="nova-confirmar">Adicionar</button>
+    <button class="btn-sec" data-acao="nova-cancelar">Cancelar</button>
   </div>
 </div>
 
-<div style="height:12px"></div>
+<details class="gaveta" id="gaveta">
+  <summary><span>Artes padrão</span><span id="contagem-padrao"></span></summary>
+  <div class="bloco" style="padding:10px 16px;border-bottom:0">
+    <input class="campo" id="busca" type="search" placeholder="Buscar arte…" autocomplete="off">
+  </div>
+  <div class="lista" id="lista-padrao"></div>
+</details>
 
-<div class="secao">Posters · Predinho do Dia</div>
+<div class="secao" style="margin-top:14px"><span>Posters · Predinho do Dia</span></div>
 <div class="lista" id="lista-posters"></div>
+<button class="dashed" data-acao="poster-novo">＋ Adicionar poster</button>
 
-<div class="nova-poster-btn" id="btn-novo-poster" onclick="adicionarPoster()">
-  <span style="font-size:18px;line-height:1">＋</span>
-  Adicionar poster
-</div>
-
-<div style="height:12px"></div>
-
-<div class="totais-wrap" id="totais-wrap">
+<div class="totais" id="totais">
   <div class="totais-titulo">Totais do pedido</div>
   <div class="totais-grid">
-    <div class="total-cel"><div class="total-num" id="tot-a6">0</div><div class="total-label">A6</div></div>
-    <div class="total-cel"><div class="total-num" id="tot-a5">0</div><div class="total-label">A5</div></div>
-    <div class="total-cel"><div class="total-num" id="tot-a4">0</div><div class="total-label">A4</div></div>
-    <div class="total-cel"><div class="total-num" id="tot-a3">0</div><div class="total-label">A3</div></div>
-    <div class="total-cel"><div class="total-num" id="tot-a2">0</div><div class="total-label">A2</div></div>
-    <div class="total-cel"><div class="total-num" id="tot-total">0</div><div class="total-label">Total</div></div>
+    <div class="tc"><span class="n" id="tot-a6">0</span><span class="l">A6</span></div>
+    <div class="tc"><span class="n" id="tot-a5">0</span><span class="l">A5</span></div>
+    <div class="tc"><span class="n" id="tot-a4">0</span><span class="l">A4</span></div>
+    <div class="tc"><span class="n" id="tot-a3">0</span><span class="l">A3</span></div>
+    <div class="tc"><span class="n" id="tot-a2">0</span><span class="l">A2</span></div>
+    <div class="tc"><span class="n" id="tot-a1">0</span><span class="l">A1</span></div>
+    <div class="tc total"><span class="n" id="tot-total">0</span><span class="l">Total</span></div>
   </div>
+  <div class="custo-linha"><span>Custo estimado (fornecedor)</span><strong id="tot-custo">R$ 0,00</strong></div>
+  <div class="custo-nota" id="custo-nota"></div>
 </div>
 
 <div style="height:16px"></div>
+<button class="fab" id="fab" data-acao="revisar">Revisar e enviar ↗</button>
 
-<button class="fab-pdf" id="fab-pdf" onclick="enviarWhatsApp()">Enviar pelo WhatsApp ↗</button>
+<dialog id="revisao">
+  <div class="dlg">
+    <h2>Revisar pedido</h2>
+    <div class="erros hide" id="erros"></div>
+    <pre class="msg" id="msg"></pre>
+    <div class="acoes">
+      <button class="btn-primario" id="btn-enviar" data-acao="enviar">Enviar pelo WhatsApp ↗</button>
+      <button class="btn-sec" data-acao="copiar">Copiar texto</button>
+    </div>
+    <button class="btn-sec" data-acao="fechar-revisao">Voltar e editar</button>
+  </div>
+</dialog>
 
 <script>
-const ARTES = [
-  {nome:'CCMQ', versao:'A'},{nome:'CCMQ', versao:'C'},{nome:'CCMQ', versao:'D'},
-  {nome:'Borges', versao:'A'},{nome:'Jóia', versao:'A'},{nome:'Mercado', versao:'A'},
-  {nome:'Capitólio', versao:'A'},{nome:'Cabaret', versao:'A'},{nome:'Rocco', versao:'A'},
-  {nome:'CAFF', versao:'A'},{nome:'Elaguante', versao:'A'},{nome:'HPS', versao:'A'},
-  {nome:'Travessa V.', versao:'A'},{nome:'Vista PoA', versao:'A'},
-  {nome:'Iberê', versao:'A'},{nome:'Iberê', versao:'B'},
-  {nome:'Catedral', versao:'A'},{nome:'Beco dos Livros', versao:'A'},
-  {nome:'Laçador', versao:'A'},{nome:'Agulha', versao:'A'},
-  {nome:'Planetário', versao:'A'},{nome:'Beira Rio', versao:'A'},
-  {nome:'Gasômetro', versao:'A'},{nome:'Olímpico', versao:'A'},
-  {nome:'Orla', versao:'A'},{nome:'MTST', versao:'A'},
-];
+/* ── dados ── */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtBRL = v => v.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+const PAPEIS = ['Canson Matte 200g', 'Hahnemühle Photo Rag 308g'];
+// Tabela do fornecedor, em R$ por print. Cada tamanho custa o dobro do menor (área dobra).
+// A5 = A4 / 2 e A6 = A4 / 4, pela mesma proporção.
+const TABELA = {
+  'Canson Matte 200g': {a4: 30, a3: 60, a2: 120, a1: 240},
+  'Hahnemühle Photo Rag 308g': {a4: 60, a3: 120, a2: 240, a1: 480}
+};
+const PRECOS = Object.fromEntries(Object.entries(TABELA).map(([papel, t]) =>
+  [papel, {a6: t.a4 / 4, a5: t.a4 / 2, ...t}]));
+const TAM = ['a6','a5','a4','a3','a2'];
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MESES_LONGOS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const BASE = [['CCMQ','A'],['CCMQ','C'],['CCMQ','D'],['Borges','A'],['Jóia','A'],['Mercado','A'],['Capitólio','A'],['Cabaret','A'],['Rocco','A'],['CAFF','A'],['Elaguante','A'],['HPS','A'],['Travessa V.','A'],['Vista PoA','A'],['Iberê','A'],['Iberê','B'],['Catedral','A'],['Beco dos Livros','A'],['Laçador','A'],['Agulha','A'],['Planetário','A'],['Beira Rio','A'],['Gasômetro','A'],['Olímpico','A'],['Orla','A'],['MTST','A']];
+const STORE = 'uns-predinhos-pedido-v3';
+const WA = '5551994791919';
 
-const PAPEIS = ['Canson Matte 200g','Hahnemühle Photo Rag 308g'];
+/* ── estado ── */
+// Artes com novaArte = pedidos únicos (topo da página). As demais são artes padrão (gaveta).
+// est[id].papel: '' = sem papel | nome do papel | '__outro' (texto em papelTexto)
+function novoPedido(artes) {
+  return {
+    nome: '', est: {}, posters: [], ultimo: null,
+    artes: artes || BASE.map((v, i) => ({id: 'b' + i, nome: v[0], versao: v[1]})),
+    aberto: null, posterAberto: null, filtro: ''
+  };
+}
+function carregar() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (d && Array.isArray(d.artes)) return {...novoPedido(d.artes), ...d};
+  } catch (_) {}
+  return novoPedido();
+}
+let S = carregar();
 
-// estado por índice
-let est = {};
-let aberto = null;
+const vazio = () => ({a6:0,a5:0,a4:0,a3:0,a2:0,papel:'',papelTexto:'',usoUnico:false,clienteNome:'',clienteArquivo:'',clienteLink:''});
+const estDe = id => S.est[id] || (S.est[id] = vazio());
+const qtdArte = x => TAM.reduce((s, t) => s + (x[t] || 0), 0);
+const qtdPoster = p => (p.a3 || 0) + (p.a2 || 0) + (p.a1 || 0);
+const getPoster = id => S.posters.find(p => String(p.id) === String(id));
+const papelDe = x => x.papel === '__outro' ? (x.papelTexto || '').trim() : (x.papel || '');
+function salvar() { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (_) {} }
 
-function estadoVazio() {
-  return {a6:0,a5:0,a4:0,a3:0,a2:0,papel:'',usoUnico:false,clienteNome:'',clienteArquivo:'',clienteLink:''};
+/* ── custo (tabela do fornecedor) ── */
+function custoDe(papel, qtds) {
+  const tab = PRECOS[papel];
+  let valor = 0, semPreco = 0;
+  Object.entries(qtds).forEach(([tam, q]) => {
+    if (!q) return;
+    const preco = tab && tab[tam];
+    if (preco) valor += preco * q; else semPreco += q;
+  });
+  return {valor, semPreco};
+}
+const custoArte = x => custoDe(papelDe(x), {a6: x.a6, a5: x.a5, a4: x.a4, a3: x.a3, a2: x.a2});
+const custoPoster = p => custoDe(p.papel, {a3: p.a3 || 0, a2: p.a2 || 0, a1: p.a1 || 0});
+function textoCusto(c, q) {
+  if (!q) return '';
+  if (!c.valor && c.semPreco) return 'Sem preço na tabela para este papel ou tamanho.';
+  return `Custo estimado: ${fmtBRL(c.valor)}` + (c.semPreco ? ` · ${c.semPreco} sem preço` : '');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const hoje = new Date();
-  document.getElementById('topo-data').textContent =
-    hoje.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'}).replace('.',' de').replace('.',' ');
-  const dd = String(hoje.getDate()).padStart(2,'0');
-  const mm = String(hoje.getMonth()+1).padStart(2,'0');
-  document.getElementById('pedido-nome').placeholder = `Reposição ${dd}/${mm}`;
-  ARTES.forEach((_,i) => est[i] = estadoVazio());
-  renderLista();
-  renderPosters();
-});
-
-// ── RENDER LISTA ──
-function renderLista() {
-  const lista = document.getElementById('lista');
-  lista.innerHTML = ARTES.map((arte, i) => renderCard(arte, i)).join('');
-  atualizarTotais();
+/* ── cálculo geral (uma só fonte para tela, custo e mensagem) ── */
+function calcular() {
+  const t = {a6:0,a5:0,a4:0,a3:0,a2:0,a1:0};
+  let valor = 0, semPreco = 0;
+  S.artes.forEach(a => {
+    const x = estDe(a.id);
+    TAM.forEach(k => t[k] += x[k] || 0);
+    const c = custoArte(x); valor += c.valor; semPreco += c.semPreco;
+  });
+  S.posters.forEach(p => {
+    ['a3','a2','a1'].forEach(k => t[k] += p[k] || 0);
+    const c = custoPoster(p); valor += c.valor; semPreco += c.semPreco;
+  });
+  const itens = S.artes.filter(a => qtdArte(estDe(a.id)) > 0).length
+              + S.posters.filter(p => qtdPoster(p) > 0).length;
+  const total = Object.values(t).reduce((a, b) => a + b, 0);
+  return {t, total, itens, custo: {valor, semPreco}};
 }
 
-function renderCard(arte, i) {
-  const e = est[i] || estadoVazio();
-  const total = e.a6+e.a5+e.a4+e.a3+e.a2;
-  const preenchida = total > 0;
-  const isAberta = aberto === i;
-
-  // resumo para linha fechada
-  let resumoParts = [];
-  if (e.a6) resumoParts.push(`${e.a6}×A6`);
-  if (e.a5) resumoParts.push(`${e.a5}×A5`);
-  if (e.a4) resumoParts.push(`${e.a4}×A4`);
-  if (e.a3) resumoParts.push(`${e.a3}×A3`);
-  if (e.a2) resumoParts.push(`${e.a2}×A2`);
-  const resumoQtd = resumoParts.join(' · ');
-  const papelAbrev = e.papel ? (e.papel.length > 18 ? e.papel.slice(0,17)+'…' : e.papel) : '';
-
-  return `
-  <div class="arte-card${preenchida?' preenchida':''}${isAberta?' aberta':''}" id="card-${i}">
-
-    <div class="arte-trigger" onclick="toggleCard(${i})">
-      <div class="trigger-left">
-        <div class="arte-nome">
-          ${arte.nome}
-          <span class="versao-pill">${arte.versao}</span>
-          ${e.usoUnico ? `<span class="uso-badge">uso único</span>` : ''}
-        </div>
-        ${preenchida ? `
-          <div class="arte-resumo">
-            <span class="resumo-qtd">${resumoQtd}</span>
-            ${papelAbrev ? `<span class="resumo-papel">· ${papelAbrev}</span>` : ''}
-          </div>` : `<div class="arte-resumo" style="color:var(--rule)">Toque para preencher</div>`}
-      </div>
-      <div class="trigger-right">
-        <div class="check-icon">${preenchida ? '✓' : ''}</div>
-        <div class="chevron">▾</div>
-      </div>
+/* ── HTML: artes ── */
+function htmlTrigger(a, x) {
+  const q = qtdArte(x);
+  const partes = TAM.filter(t => x[t]).map(t => `${x[t]}×${t.toUpperCase()}`).join(' · ');
+  const papel = papelDe(x);
+  const c = custoArte(x);
+  let resumo;
+  if (!q) resumo = '<span>Toque para preencher</span>';
+  else resumo = `<span class="qtd">${partes}</span>`
+    + (papel ? ` · ${esc(papel)}` : ' · <span class="aviso">falta papel</span>')
+    + (c.valor ? ` · <span class="custo">${fmtBRL(c.valor)}</span>` : '');
+  return `<span class="trig-esq">
+      <span class="arte-nome">${esc(a.nome)} <span class="pill">${esc(a.versao)}</span>${x.usoUnico ? ' <span class="badge">uso único</span>' : ''}</span>
+      <span class="arte-resumo">${resumo}</span>
+    </span>
+    <span class="trig-dir"><span class="check">${q ? '✓' : ''}</span><span class="seta" aria-hidden="true">▾</span></span>`;
+}
+function stepper(ctx, id, t, v) {
+  const T = t.toUpperCase();
+  const attrs = `data-ctx="${ctx}" data-id="${esc(id)}" data-t="${t}"`;
+  return `<div>
+    <span class="qtd-lbl">${T}</span>
+    <div class="stepper">
+      <button class="step-btn" data-passo="-1" ${attrs} aria-label="Diminuir ${T}">−</button>
+      <input class="step-val" type="number" inputmode="numeric" min="0" value="${v || 0}" data-qtd ${attrs} aria-label="Quantidade ${T}">
+      <button class="step-btn" data-passo="1" ${attrs} aria-label="Aumentar ${T}">+</button>
     </div>
-
+  </div>`;
+}
+function opcoesPapel(atual, comOutro) {
+  let h = `<option value="" ${!atual ? 'selected' : ''}>Escolher papel…</option>`;
+  h += PAPEIS.map(p => `<option value="${esc(p)}" ${atual === p ? 'selected' : ''}>${esc(p)}</option>`).join('');
+  if (comOutro) h += `<option value="__outro" ${atual === '__outro' ? 'selected' : ''}>Outro…</option>`;
+  return h;
+}
+function campoUU(label, f, x, ph, tipo, id) {
+  return `<div><label for="uu-${f}-${id}">${label}</label>
+    <input class="campo" id="uu-${f}-${id}" type="${tipo}" placeholder="${esc(ph)}" value="${esc(x[f])}" data-f="${f}" data-id="${id}"></div>`;
+}
+function htmlArte(a) {
+  const x = estDe(a.id), q = qtdArte(x), aberta = S.aberto === a.id;
+  return `<div class="arte-card${q ? ' preenchida' : ''}${aberta ? ' aberta' : ''}" data-card="${a.id}">
+    <button class="arte-trigger" data-acao="abrir" data-id="${a.id}" aria-expanded="${aberta}">${htmlTrigger(a, x)}</button>
     <div class="arte-editor">
-      <div class="qtd-label">Quantidades</div>
-      <div class="qtd-grid">
-        ${['a6','a5','a4','a3','a2'].map(tam => `
-          <div class="qtd-field">
-            <label>${tam.toUpperCase()}</label>
-            <div class="stepper">
-              <button class="step-btn" ontouchstart="stepTouch(event,${i},'${tam}',-1)" onclick="step(${i},'${tam}',-1)">−</button>
-              <input class="step-val" type="number" inputmode="numeric" pattern="[0-9]*"
-                     value="${e[tam]||0}" min="0"
-                     id="inp-${i}-${tam}"
-                     onchange="setVal(${i},'${tam}',this.value)"
-                     onfocus="this.select()">
-              <button class="step-btn" ontouchstart="stepTouch(event,${i},'${tam}',1)" onclick="step(${i},'${tam}',1)">+</button>
-            </div>
-          </div>`).join('')}
-      </div>
+      <span class="rotulo acento">Quantidades</span>
+      <div class="qtd-grid">${TAM.map(t => stepper('arte', a.id, t, x[t])).join('')}</div>
+      <p class="custo-nota">${textoCusto(custoArte(x), q)}</p>
 
-      <div class="papel-label">Papel</div>
-      <div class="papel-opcoes">
-        ${PAPEIS.map((p, pi) => `
-          <div class="papel-opcao${e.papel===p?' selecionado':''}"
-               data-idx="${i}" data-pi="${pi}"
-               onclick="selecionarPapelIdx(this)">
-            <div class="papel-radio"></div>
-            ${p}
-          </div>`).join('')}
-        <div class="papel-opcao${e.papel&&!PAPEIS.includes(e.papel)?' selecionado':''}"
-             data-idx="${i}" data-pi="-1"
-             onclick="selecionarPapelIdx(this)">
-          <div class="papel-radio"></div>
-          Outro papel…
-        </div>
-        <input class="papel-livre${e.papel&&!PAPEIS.includes(e.papel)?' visivel':''}"
-               type="text" placeholder="Especificar papel…"
-               id="papel-livre-${i}"
-               value="${e.papel&&!PAPEIS.includes(e.papel)?e.papel:''}"
-               oninput="est[${i}].papel=this.value;atualizarCard(${i})">
-      </div>
+      <label class="rotulo acento" for="papel-${a.id}">Papel</label>
+      <select class="campo" id="papel-${a.id}" data-f="papel" data-id="${a.id}">${opcoesPapel(x.papel, true)}</select>
+      ${x.papel === '__outro' ? `<input class="campo" type="text" placeholder="Especificar papel…" value="${esc(x.papelTexto)}" data-f="papelTexto" data-id="${a.id}">` : ''}
 
-      ${ARTES[i] && ARTES[i].novaArte ? `
-      <div class="uso-unico-row" onclick="toggleUso(${i})">
-        <div>
-          <div class="uso-unico-label">Pedido de cliente específico</div>
-          <div class="uso-unico-sub">Uso único — não repor no estoque</div>
-        </div>
-        <div class="switch${e.usoUnico?' on':''}" id="sw-${i}"></div>
-      </div>
-
-      <div class="uso-unico-campos${e.usoUnico?' visivel':''}" id="uu-${i}">
-        <div class="uu-campo">
-          <label>Nome do cliente</label>
-          <input type="text" value="${e.clienteNome}" placeholder="ex: Maria Fernanda"
-                 oninput="est[${i}].clienteNome=this.value">
-        </div>
-        <div class="uu-campo">
-          <label>Nome do arquivo</label>
-          <input type="text" value="${e.clienteArquivo}" placeholder="arte_alta_cliente.tif"
-                 oninput="est[${i}].clienteArquivo=this.value">
-        </div>
-        <div class="uu-campo">
-          <label>Link Drive</label>
-          <input type="url" value="${e.clienteLink}" placeholder="https://drive.google.com/…"
-                 oninput="est[${i}].clienteLink=this.value">
-        </div>
+      <button class="switch-linha" role="switch" aria-checked="${x.usoUnico}" data-acao="uso" data-id="${a.id}">
+        <span><span class="uso-lbl">Pedido de cliente específico</span><span class="uso-sub">Uso único — não repor no estoque</span></span>
+        <span class="switch${x.usoUnico ? ' on' : ''}"></span>
+      </button>
+      ${x.usoUnico ? `<div class="uu">
+        ${campoUU('Nome do cliente', 'clienteNome', x, 'ex: Maria Fernanda', 'text', a.id)}
+        ${campoUU('Nome do arquivo', 'clienteArquivo', x, 'arte_alta_cliente.tif', 'text', a.id)}
+        ${campoUU('Link Drive', 'clienteLink', x, 'https://drive.google.com/…', 'url', a.id)}
       </div>` : ''}
 
-      <div class="editor-acoes">
-        <button class="btn-confirmar" onclick="fecharCard(${i})">Confirmar ✓</button>
-        <button class="btn-limpar" onclick="limparCard(${i})">Limpar</button>
+      <div class="acoes">
+        <button class="btn-primario" data-acao="fechar">Confirmar ✓</button>
+        <button class="btn-sec" data-acao="limpar" data-id="${a.id}">Limpar</button>
+        ${a.novaArte ? `<button class="btn-sec perigo" data-acao="remover-arte" data-id="${a.id}">Remover arte</button>` : ''}
       </div>
     </div>
-
   </div>`;
 }
-
-// ── INTERAÇÕES ──
-function toggleCard(i) {
-  if (aberto === i) { aberto = null; }
-  else { aberto = i; }
-  renderLista();
-  if (aberto === i) {
-    setTimeout(() => {
-      const card = document.getElementById(`card-${i}`);
-      if (card) card.scrollIntoView({behavior:'smooth', block:'nearest'});
-    }, 120);
-  }
+function renderArtes() {
+  const f = S.filtro.trim().toLowerCase();
+  const casa = a => !f || `${a.nome} ${a.versao}`.toLowerCase().includes(f);
+  const unicas = S.artes.filter(a => a.novaArte && casa(a));
+  const padrao = S.artes.filter(a => !a.novaArte && casa(a));
+  const preenchidasPadrao = S.artes.filter(a => !a.novaArte && qtdArte(estDe(a.id)) > 0).length;
+  $('lista-unicas').innerHTML = unicas.map(htmlArte).join('')
+    || '<p class="vazio-lista">Nenhum pedido único. Use “Nova arte” para criar um.</p>';
+  $('lista-padrao').innerHTML = padrao.map(htmlArte).join('') || '<p class="vazio-lista">Nenhuma arte encontrada.</p>';
+  $('contagem-unicas').textContent = `${S.artes.filter(a => a.novaArte).length}`;
+  $('contagem-padrao').textContent = `${S.artes.filter(a => !a.novaArte).length} artes · ${preenchidasPadrao} preenchidas`;
+  if (f) $('gaveta').open = true;
+}
+function atualizarCard(id) {
+  const a = S.artes.find(x => x.id === id), el = document.querySelector(`[data-card="${id}"]`);
+  if (!a || !el) return;
+  const x = estDe(id);
+  el.classList.toggle('preenchida', qtdArte(x) > 0);
+  el.querySelector('.arte-trigger').innerHTML = htmlTrigger(a, x);
+  el.querySelector('.custo-nota').textContent = textoCusto(custoArte(x), qtdArte(x));
 }
 
-function fecharCard(i) {
-  aberto = null;
-  renderLista();
-}
+/* ── HTML: posters ── */
+function htmlPoster(p) {
+  const aberto = S.posterAberto === String(p.id);
+  const mes = p.mes != null ? MESES[p.mes] : null;
+  const q = qtdPoster(p);
+  const varLbl = p.variante === 'com' ? 'c/ endereços' : p.variante === 'sem' ? 's/ endereços' : '';
+  const c = custoPoster(p);
+  const completo = mes && p.variante && p.papel && q > 0;
+  let resumo;
+  if (!mes) resumo = 'Toque para configurar';
+  else if (!p.variante) resumo = `${mes} · escolha a variante`;
+  else resumo = `${mes} · ${varLbl}` + (q ? ' · ' + ['a3','a2','a1'].filter(t => p[t]).map(t => `${p[t]}×${t.toUpperCase()}`).join(' · ') : '')
+    + (c.valor ? ' · ' + fmtBRL(c.valor) : '');
+  return `<div class="arte-card${completo ? ' preenchida' : ''}${aberto ? ' aberta' : ''}" data-poster="${p.id}">
+    <button class="arte-trigger" data-acao="poster-abrir" data-id="${p.id}" aria-expanded="${aberto}">
+      <span class="trig-esq">
+        <span class="arte-nome">Predinho do Dia${mes ? ` <span class="pill">${mes}</span>` : ''}${p.variante ? ` <span class="pill">${varLbl}</span>` : ''}</span>
+        <span class="arte-resumo">${completo ? `<span class="qtd">${esc(resumo)}</span>` : esc(resumo)}</span>
+      </span>
+      <span class="trig-dir"><span class="check">${completo ? '✓' : ''}</span><span class="seta" aria-hidden="true">▾</span></span>
+    </button>
+    <div class="arte-editor">
+      <span class="rotulo acento">Mês</span>
+      <div class="mes-grid">${MESES.map((m, i) => `<button class="mes-btn" aria-pressed="${p.mes === i}" data-acao="poster-mes" data-id="${p.id}" data-v="${i}">${m}</button>`).join('')}</div>
 
-function limparCard(i) {
-  est[i] = estadoVazio();
-  renderCard(ARTES[i], i); // re-render parcial via DOM
-  const card = document.getElementById(`card-${i}`);
-  if (card) {
-    card.outerHTML = renderCard(ARTES[i], i);
-    // re-bind do card reconstruído
-    renderLista();
-  }
-}
-
-// stepper
-function step(i, tam, delta) {
-  est[i][tam] = Math.max(0, (est[i][tam]||0) + delta);
-  const inp = document.getElementById(`inp-${i}-${tam}`);
-  if (inp) inp.value = est[i][tam];
-  atualizarCard(i);
-}
-
-// versão touch para evitar duplo disparo
-function stepTouch(e, i, tam, delta) {
-  e.preventDefault();
-  step(i, tam, delta);
-}
-
-function setVal(i, tam, val) {
-  est[i][tam] = Math.max(0, parseInt(val)||0);
-  atualizarCard(i);
-}
-
-function selecionarPapelIdx(el) {
-  const i = parseInt(el.dataset.idx);
-  const pi = parseInt(el.dataset.pi);
-  const livre = document.getElementById(`papel-livre-${i}`);
-  if (pi === -1) {
-    // outro
-    est[i].papel = '';
-    if (livre) { livre.classList.add('visivel'); livre.focus(); }
-  } else {
-    est[i].papel = PAPEIS[pi];
-    if (livre) { livre.classList.remove('visivel'); }
-  }
-  const opcoes = document.querySelectorAll(`#card-${i} .papel-opcao`);
-  opcoes.forEach((op, oi) => {
-    op.classList.toggle('selecionado', parseInt(op.dataset.pi) === pi);
-  });
-  atualizarTotais();
-}
-
-function toggleUso(i) {
-  est[i].usoUnico = !est[i].usoUnico;
-  const sw = document.getElementById(`sw-${i}`);
-  const campos = document.getElementById(`uu-${i}`);
-  if (sw) sw.classList.toggle('on', est[i].usoUnico);
-  if (campos) campos.classList.toggle('visivel', est[i].usoUnico);
-}
-
-// atualiza só o necessário na linha fechada quando valores mudam
-function atualizarCard(i) {
-  const card = document.getElementById(`card-${i}`);
-  if (!card) return;
-  const e = est[i];
-  const total = e.a6+e.a5+e.a4+e.a3+e.a2;
-  card.classList.toggle('preenchida', total > 0);
-  // atualizar resumo
-  let parts = [];
-  if (e.a6) parts.push(`${e.a6}×A6`);
-  if (e.a5) parts.push(`${e.a5}×A5`);
-  if (e.a4) parts.push(`${e.a4}×A4`);
-  if (e.a3) parts.push(`${e.a3}×A3`);
-  if (e.a2) parts.push(`${e.a2}×A2`);
-  const resumoEl = card.querySelector('.arte-resumo');
-  const checkEl = card.querySelector('.check-icon');
-  if (resumoEl) {
-    if (parts.length) {
-      const pAbrev = e.papel ? (e.papel.length > 18 ? e.papel.slice(0,17)+'…' : e.papel) : '';
-      resumoEl.innerHTML = `<span class="resumo-qtd">${parts.join(' · ')}</span>${pAbrev?`<span class="resumo-papel"> · ${pAbrev}</span>`:''}`;
-      resumoEl.style.color = '';
-    } else {
-      resumoEl.innerHTML = `Toque para preencher`;
-      resumoEl.style.color = 'var(--rule)';
-    }
-  }
-  if (checkEl) {
-    checkEl.textContent = total > 0 ? '✓' : '';
-    checkEl.classList.toggle('', total > 0);
-  }
-  atualizarTotais();
-}
-
-function atualizarTotais() {
-  let tA6=0,tA5=0,tA4=0,tA3=0,tA2=0;
-  Object.values(est).forEach(e => { tA6+=e.a6||0; tA5+=e.a5||0; tA4+=e.a4||0; tA3+=e.a3||0; tA2+=e.a2||0; });
-  const totalArtes = tA6+tA5+tA4+tA3+tA2;
-  const totalPosters = posters.reduce((s,p) => s+(p.a3||0)+(p.a2||0)+(p.a1||0), 0);
-  const total = totalArtes + totalPosters;
-  const itensArtes = Object.values(est).filter(e=>(e.a6+e.a5+e.a4+e.a3+e.a2)>0).length;
-  const itensPosters = posters.filter(p=>(p.a3||0)+(p.a2||0)+(p.a1||0)>0).length;
-  const itens = itensArtes + itensPosters;
-
-  document.getElementById('tot-a6').textContent = tA6;
-  document.getElementById('tot-a5').textContent = tA5;
-  document.getElementById('tot-a4').textContent = tA4;
-  document.getElementById('tot-a3').textContent = tA3;
-  document.getElementById('tot-a2').textContent = tA2;
-  document.getElementById('tot-total').textContent = total;
-
-  document.getElementById('totais-wrap').classList.toggle('visivel', total > 0);
-  document.getElementById('fab-pdf').classList.toggle('visivel', total > 0);
-
-  const ctr = document.getElementById('topo-contador');
-  if (total > 0) {
-    ctr.innerHTML = `<strong>${total}</strong> prints · ${itens} item${itens!==1?'s':''}`;
-    ctr.style.display = 'block';
-  } else {
-    ctr.style.display = 'none';
-  }
-}
-
-// ── NOVA ARTE ──
-function toggleNovaArte() {
-  const form = document.getElementById('nova-arte-form');
-  form.classList.toggle('aberta');
-  if (form.classList.contains('aberta')) {
-    document.getElementById('nova-nome').focus();
-    document.getElementById('btn-nova-arte').style.display = 'none';
-  }
-}
-
-function confirmarNovaArte() {
-  const nome = document.getElementById('nova-nome').value.trim();
-  const versao = document.getElementById('nova-versao').value.trim() || 'A';
-  if (!nome) { document.getElementById('nova-nome').focus(); return; }
-  const idx = ARTES.length;
-  ARTES.push({nome, versao, novaArte: true});
-  est[idx] = estadoVazio();
-  document.getElementById('nova-nome').value = '';
-  document.getElementById('nova-versao').value = '';
-  document.getElementById('nova-arte-form').classList.remove('aberta');
-  document.getElementById('btn-nova-arte').style.display = 'flex';
-  aberto = idx;
-  renderLista();
-  setTimeout(() => {
-    const card = document.getElementById(`card-${idx}`);
-    if (card) card.scrollIntoView({behavior:'smooth', block:'center'});
-  }, 100);
-}
-
-function cancelarNovaArte() {
-  document.getElementById('nova-nome').value = '';
-  document.getElementById('nova-arte-form').classList.remove('aberta');
-  document.getElementById('btn-nova-arte').style.display = 'flex';
-}
-
-// ── POSTERS ──
-const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-let posters = []; // [{id, mes, variante, a3, a2, a1}]
-let posterAberto = null;
-
-function adicionarPoster() {
-  const id = Date.now();
-  posters.push({id, mes: null, variante: null, a3:0, a2:0, a1:0});
-  posterAberto = id;
-  renderPosters();
-  setTimeout(() => {
-    const card = document.getElementById(`poster-${id}`);
-    if (card) card.scrollIntoView({behavior:'smooth', block:'center'});
-  }, 100);
-}
-
-function renderPosters() {
-  const lista = document.getElementById('lista-posters');
-  lista.innerHTML = posters.map(p => renderPosterCard(p)).join('');
-  atualizarTotais();
-}
-
-function renderPosterCard(p) {
-  const aberta = posterAberto === p.id;
-  const mesNome = p.mes !== null ? MESES[p.mes] : null;
-  const totalPoster = (p.a3||0)+(p.a2||0)+(p.a1||0);
-  const preenchida = mesNome && p.variante && totalPoster > 0;
-
-  let resumo = 'Toque para configurar';
-  if (mesNome && p.variante) {
-    const varLabel = p.variante === 'com' ? 'c/ endereços' : 's/ endereços';
-    let qtdParts = [];
-    if (p.a3) qtdParts.push(`${p.a3}×A3`);
-    if (p.a2) qtdParts.push(`${p.a2}×A2`);
-    if (p.a1) qtdParts.push(`${p.a1}×A1`);
-    resumo = `${mesNome} · ${varLabel}${qtdParts.length ? ' · ' + qtdParts.join(' · ') : ''}`;
-  } else if (mesNome) {
-    resumo = `${mesNome} · escolha a variante`;
-  }
-
-  return `
-  <div class="poster-card${preenchida?' preenchida':''}${aberta?' aberta':''}" id="poster-${p.id}">
-    <div class="poster-trigger" onclick="togglePoster(${p.id})">
-      <div>
-        <div class="poster-nome">
-          Predinho do Dia
-          ${mesNome ? `<span class="poster-variante-pill">${mesNome}</span>` : ''}
-          ${p.variante ? `<span class="poster-variante-pill ${p.variante}">${p.variante === 'com' ? 'c/ endereços' : 's/ endereços'}</span>` : ''}
-        </div>
-        <div class="poster-resumo${preenchida?' ok':''}">${resumo}</div>
-      </div>
-      <div class="trigger-right">
-        <div class="check-icon">${preenchida ? '✓' : ''}</div>
-        <div class="chevron">▾</div>
-      </div>
-    </div>
-
-    <div class="poster-editor">
-      <div class="mes-label">Mês</div>
-      <div class="mes-grid">
-        ${MESES.map((m, mi) => `
-          <button class="mes-btn${p.mes===mi?' selecionado':''}"
-                  onclick="setPosterMes(${p.id},${mi})">${m}</button>
-        `).join('')}
-      </div>
-
-      <div class="variante-label">Variante</div>
+      <span class="rotulo acento">Variante</span>
       <div class="variante-row">
-        <button class="variante-btn${p.variante==='com'?' selecionado com':''}"
-                onclick="setPosterVariante(${p.id},'com')">
-          Com endereços
-          <small>logradouro impresso</small>
-        </button>
-        <button class="variante-btn${p.variante==='sem'?' selecionado':''}"
-                onclick="setPosterVariante(${p.id},'sem')">
-          Sem endereços
-          <small>somente arte</small>
-        </button>
+        <button class="var-btn" aria-pressed="${p.variante === 'com'}" data-acao="poster-var" data-id="${p.id}" data-v="com">Com endereços<small>logradouro impresso</small></button>
+        <button class="var-btn" aria-pressed="${p.variante === 'sem'}" data-acao="poster-var" data-id="${p.id}" data-v="sem">Sem endereços<small>somente arte</small></button>
       </div>
 
-      <div class="qtd-label">Quantidades</div>
-      <div class="qtd-grid" style="grid-template-columns:repeat(3,1fr)">
-        ${['a3','a2','a1'].map(tam => `
-          <div class="qtd-field">
-            <label>${tam.toUpperCase()}</label>
-            <div class="stepper">
-              <button class="step-btn" ontouchstart="stepPosterTamTouch(event,${p.id},'${tam}',-1)" onclick="stepPosterTam(${p.id},'${tam}',-1)">−</button>
-              <input class="step-val" type="number" inputmode="numeric" pattern="[0-9]*"
-                     value="${p[tam]||0}" min="0" id="ptam-${p.id}-${tam}"
-                     onchange="setPosterTam(${p.id},'${tam}',this.value)"
-                     onfocus="this.select()">
-              <button class="step-btn" ontouchstart="stepPosterTamTouch(event,${p.id},'${tam}',1)" onclick="stepPosterTam(${p.id},'${tam}',1)">+</button>
-            </div>
-          </div>`).join('')}
-      </div>
+      <span class="rotulo acento">Papel</span>
+      <select class="campo" data-pid="${p.id}" aria-label="Papel do poster">${opcoesPapel(p.papel, false)}</select>
 
-      <div class="editor-acoes">
-        <button class="btn-confirmar" onclick="fecharPoster(${p.id})">Confirmar ✓</button>
-        <button class="btn-remover-poster" onclick="removerPoster(${p.id})">Remover poster</button>
+      <span class="rotulo acento">Quantidades</span>
+      <div class="qtd-grid">${['a3','a2','a1'].map(t => stepper('poster', p.id, t, p[t])).join('')}</div>
+      <p class="custo-nota">${textoCusto(c, q)}</p>
+
+      <div class="acoes">
+        <button class="btn-primario" data-acao="poster-fechar">Confirmar ✓</button>
+        <button class="btn-sec perigo" data-acao="poster-remover" data-id="${p.id}">Remover</button>
       </div>
     </div>
   </div>`;
 }
+function renderPosters() {
+  $('lista-posters').innerHTML = S.posters.map(htmlPoster).join('');
+}
 
-function togglePoster(id) {
-  posterAberto = posterAberto === id ? null : id;
+/* ── totais e renderização geral ── */
+function atualizarTotais() {
+  const {t, total, itens, custo} = calcular();
+  ['a6','a5','a4','a3','a2','a1'].forEach(k => $('tot-' + k).textContent = t[k]);
+  $('tot-total').textContent = total;
+  $('tot-custo').textContent = fmtBRL(custo.valor);
+  $('custo-nota').textContent = custo.semPreco
+    ? `${custo.semPreco} print(s) sem preço na tabela (A6, A5 ou papel sem tabela). Não entram no custo.` : '';
+  $('totais').classList.toggle('visivel', total > 0);
+  $('fab').classList.toggle('visivel', total > 0);
+  const c = $('topo-contador');
+  c.style.display = total ? 'block' : 'none';
+  c.innerHTML = `<strong>${total}</strong> prints · ${itens} ${itens === 1 ? 'item' : 'itens'}`;
+  $('btn-repetir').classList.toggle('hide', !S.ultimo);
+}
+function renderTudo() {
+  $('nome-pedido').value = S.nome;
+  renderArtes();
   renderPosters();
-}
-
-function fecharPoster(id) {
-  posterAberto = null;
-  renderPosters();
-}
-
-function removerPoster(id) {
-  posters = posters.filter(p => p.id !== id);
-  if (posterAberto === id) posterAberto = null;
-  renderPosters();
-}
-
-function setPosterMes(id, mi) {
-  const p = posters.find(p => p.id === id);
-  if (p) { p.mes = mi; renderPosters(); }
-}
-
-function setPosterVariante(id, v) {
-  const p = posters.find(p => p.id === id);
-  if (p) { p.variante = v; renderPosters(); }
-}
-
-function stepPosterTam(id, tam, delta) {
-  const p = posters.find(p => p.id === id);
-  if (!p) return;
-  p[tam] = Math.max(0, (p[tam]||0) + delta);
-  const inp = document.getElementById(`ptam-${id}-${tam}`);
-  if (inp) inp.value = p[tam];
   atualizarTotais();
 }
-
-function stepPosterTamTouch(e, id, tam, delta) {
-  e.preventDefault();
-  stepPosterTam(id, tam, delta);
+function atualizarValor(ctx, id, t) {
+  if (ctx === 'arte') {
+    atualizarCard(id);
+    const inp = document.querySelector(`input[data-qtd][data-ctx="arte"][data-id="${id}"][data-t="${t}"]`);
+    if (inp) inp.value = estDe(id)[t];
+  } else {
+    renderPosters();
+  }
+  atualizarTotais();
+  salvar();
+}
+function passo(ctx, id, t, d) {
+  if (ctx === 'arte') {
+    const x = estDe(id);
+    x[t] = Math.max(0, (x[t] || 0) + d);
+  } else {
+    const p = getPoster(id);
+    if (!p) return;
+    p[t] = Math.max(0, (p[t] || 0) + d);
+  }
+  atualizarValor(ctx, id, t);
 }
 
-function setPosterTam(id, tam, val) {
-  const p = posters.find(p => p.id === id);
-  if (p) { p[tam] = Math.max(0, parseInt(val)||0); atualizarTotais(); }
+/* ── ações sobre artes ── */
+function limparArte(id) {
+  if (qtdArte(estDe(id)) && !confirm('Limpar quantidades, papel e dados de uso único desta arte?')) return;
+  S.est[id] = vazio();
+  renderArtes(); atualizarTotais(); salvar();
+}
+function removerArte(id) {
+  const a = S.artes.find(x => x.id === id);
+  if (!a) return;
+  if (qtdArte(estDe(id)) && !confirm(`Remover "${a.nome} ${a.versao}" da lista?`)) return;
+  S.artes = S.artes.filter(x => x.id !== id);
+  delete S.est[id];
+  S.aberto = null;
+  renderArtes(); atualizarTotais(); salvar();
+}
+function toggleNova(on) {
+  $('nova-form').classList.toggle('aberta', on);
+  document.querySelector('[data-acao="nova-abrir"]').classList.toggle('hide', on);
+  if (on) $('nova-nome').focus();
+}
+function novaArte() {
+  const nome = $('nova-nome').value.trim();
+  const versao = $('nova-versao').value.trim() || 'A';
+  if (!nome) { $('nova-nome').focus(); return; }
+  const id = 'n' + Date.now();
+  S.artes.push({id, nome, versao, novaArte: true});
+  S.est[id] = {...vazio(), usoUnico: true}; // pedido único já nasce com uso único
+  S.aberto = id;
+  $('nova-nome').value = ''; $('nova-versao').value = '';
+  toggleNova(false);
+  renderArtes(); atualizarTotais(); salvar();
+  scrollPara(`[data-card="${id}"]`);
 }
 
-function enviarWhatsApp() {
-  const nomePedido = document.getElementById('pedido-nome').value.trim() || 'Pedido';
-  const hoje = new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
-  const MESES_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+/* ── ações sobre posters ── */
+function posterNovo() {
+  const p = {id: Date.now(), mes: null, variante: null, papel: '', a3: 0, a2: 0, a1: 0};
+  S.posters.push(p);
+  S.posterAberto = String(p.id);
+  renderPosters(); atualizarTotais(); salvar();
+  scrollPara(`[data-poster="${p.id}"]`);
+}
+function removerPoster(id) {
+  const p = getPoster(id);
+  if (!p) return;
+  if (qtdPoster(p) && !confirm('Remover este poster do pedido?')) return;
+  S.posters = S.posters.filter(x => String(x.id) !== String(id));
+  if (String(S.posterAberto) === String(id)) S.posterAberto = null;
+  renderPosters(); atualizarTotais(); salvar();
+}
 
-  let linhas = [];
+/* ── pedido: novo, repetir, validar, mensagem, enviar ── */
+function temConteudo() { return calcular().total > 0 || S.nome.trim() !== ''; }
+function novo() {
+  if (temConteudo() && !confirm('Começar um novo pedido? O pedido atual será apagado.')) return;
+  S = Object.assign(novoPedido(), {artes: S.artes, ultimo: S.ultimo});
+  renderTudo(); salvar();
+}
+function repetir() {
+  if (!S.ultimo) return;
+  if (temConteudo() && !confirm('Substituir o pedido atual pelo último enviado?')) return;
+  S.est = S.ultimo.est;
+  S.posters = S.ultimo.posters.map((p, i) => ({...p, id: Date.now() + i}));
+  S.aberto = null; S.posterAberto = null;
+  renderTudo(); salvar();
+}
+function validar() {
+  const erros = [];
+  if (!calcular().total) erros.push('Nenhuma quantidade informada.');
+  S.artes.forEach(a => {
+    const x = estDe(a.id);
+    if (!qtdArte(x)) return;
+    const nome = `${a.nome} ${a.versao}`;
+    if (!papelDe(x)) erros.push(`${nome}: falta escolher o papel.`);
+    if (x.usoUnico && !x.clienteNome.trim()) erros.push(`${nome}: uso único sem nome do cliente.`);
+  });
+  S.posters.forEach(p => {
+    if (!qtdPoster(p)) return;
+    if (p.mes == null) erros.push('Poster: falta escolher o mês.');
+    if (!p.variante) erros.push('Poster: falta escolher a variante (com ou sem endereços).');
+    if (!p.papel) erros.push('Poster: falta escolher o papel.');
+  });
+  return erros;
+}
+function montarMensagem() {
+  const nome = S.nome.trim() || 'Pedido';
+  const hoje = new Date().toLocaleDateString('pt-BR', {day: '2-digit', month: 'long', year: 'numeric'});
+  const L = [`🖨 *${nome}*`, `_${hoje}_`, ''];
 
-  linhas.push(`🖨 *${nomePedido}*`);
-  linhas.push(`_${hoje}_`);
-  linhas.push('');
-
-  // ── ARTES ──
-  const artesComQtd = ARTES.map((arte, i) => ({arte, e: est[i]}))
-    .filter(({e}) => (e.a6+e.a5+e.a4+e.a3+e.a2) > 0);
-
-  if (artesComQtd.length > 0) {
-    linhas.push('*ARTES*');
-    artesComQtd.forEach(({arte, e}) => {
-      const label = `${arte.nome} ${arte.versao}`;
-      let qtdParts = [];
-      if (e.a6) qtdParts.push(`${e.a6}×A6`);
-      if (e.a5) qtdParts.push(`${e.a5}×A5`);
-      if (e.a4) qtdParts.push(`${e.a4}×A4`);
-      if (e.a3) qtdParts.push(`${e.a3}×A3`);
-      if (e.a2) qtdParts.push(`${e.a2}×A2`);
-      const papel = e.papel ? ` — ${e.papel}` : '';
-      linhas.push(`• *${label}*: ${qtdParts.join(', ')}${papel}`);
-      if (e.usoUnico) {
-        linhas.push(`  ↳ _Uso único${e.clienteNome ? ' · ' + e.clienteNome : ''}_`);
-        if (e.clienteArquivo) linhas.push(`  ↳ Arquivo: ${e.clienteArquivo}`);
-        if (e.clienteLink)    linhas.push(`  ↳ ${e.clienteLink}`);
+  const artes = S.artes.filter(a => qtdArte(estDe(a.id)) > 0);
+  if (artes.length) {
+    L.push('*ARTES*');
+    artes.forEach(a => {
+      const x = estDe(a.id);
+      const q = TAM.filter(t => x[t]).map(t => `${x[t]}×${t.toUpperCase()}`).join(', ');
+      const papel = papelDe(x);
+      L.push(`• *${a.nome} ${a.versao}*: ${q}${papel ? ' — ' + papel : ''}`);
+      if (x.usoUnico) {
+        L.push(`  ↳ _Uso único${x.clienteNome ? ' · ' + x.clienteNome : ''}_`);
+        if (x.clienteArquivo) L.push(`  ↳ Arquivo: ${x.clienteArquivo}`);
+        if (x.clienteLink) L.push(`  ↳ ${x.clienteLink}`);
       }
     });
-    linhas.push('');
+    L.push('');
   }
 
-  // ── POSTERS ──
-  const postersOk = posters.filter(p => (p.a3||0)+(p.a2||0)+(p.a1||0) > 0);
-  if (postersOk.length > 0) {
-    linhas.push('*POSTERS · PREDINHO DO DIA*');
-    postersOk.forEach(p => {
-      const mes = p.mes !== null ? MESES_FULL[p.mes] : '(mês não definido)';
-      const variante = p.variante === 'com' ? 'com endereços' : p.variante === 'sem' ? 'sem endereços' : '';
-      let qtdParts = [];
-      if (p.a3) qtdParts.push(`${p.a3}×A3`);
-      if (p.a2) qtdParts.push(`${p.a2}×A2`);
-      if (p.a1) qtdParts.push(`${p.a1}×A1`);
-      linhas.push(`• *${mes}* (${variante}): ${qtdParts.join(', ')}`);
+  const posters = S.posters.filter(p => qtdPoster(p) > 0);
+  if (posters.length) {
+    L.push('*POSTERS · PREDINHO DO DIA*');
+    posters.forEach(p => {
+      const mes = p.mes != null ? MESES_LONGOS[p.mes] : '(mês não definido)';
+      const v = p.variante === 'com' ? 'com endereços' : p.variante === 'sem' ? 'sem endereços' : '(variante não definida)';
+      const q = ['a3','a2','a1'].filter(t => p[t]).map(t => `${p[t]}×${t.toUpperCase()}`).join(', ');
+      L.push(`• *${mes}* (${v}): ${q}${p.papel ? ' — ' + p.papel : ''}`);
     });
-    linhas.push('');
+    L.push('');
   }
 
-  // ── TOTAIS ──
-  const tots = {A6:0,A5:0,A4:0,A3:0,A2:0,A1:0};
-  ARTES.forEach((_, i) => {
-    const e = est[i];
-    tots.A6+=e.a6||0; tots.A5+=e.a5||0; tots.A4+=e.a4||0;
-    tots.A3+=e.a3||0; tots.A2+=e.a2||0;
-  });
-  postersOk.forEach(p => {
-    tots.A3+=p.a3||0; tots.A2+=p.a2||0; tots.A1+=p.a1||0;
-  });
-  const totalGeral = Object.values(tots).reduce((a,b)=>a+b,0);
-
-  const totStr = Object.entries(tots)
-    .filter(([,v]) => v > 0)
-    .map(([k,v]) => `${v}×${k}`)
-    .join(' · ');
-
-  linhas.push(`*TOTAL: ${totalGeral} prints*`);
-  if (totStr) linhas.push(`${totStr}`);
-
-  const mensagem = linhas.join('\n');
-  const url = `https://wa.me/5551994791919?text=${encodeURIComponent(mensagem)}`;
-  window.open(url, '_blank');
+  const {t, total} = calcular();
+  L.push(`*TOTAL: ${total} prints*`);
+  const det = ['a6','a5','a4','a3','a2','a1'].filter(k => t[k]).map(k => `${t[k]}×${k.toUpperCase()}`).join(' · ');
+  if (det) L.push(det);
+  return L.join('\n');
 }
+function abrirRevisao() {
+  const erros = validar();
+  $('erros').classList.toggle('hide', !erros.length);
+  $('erros').innerHTML = erros.length
+    ? `<strong>Corrija antes de enviar:</strong><ul>${erros.map(e => `<li>${esc(e)}</li>`).join('')}</ul>` : '';
+  $('msg').textContent = montarMensagem();
+  $('btn-enviar').disabled = erros.length > 0;
+  $('revisao').showModal();
+}
+async function copiar(btn) {
+  try {
+    await navigator.clipboard.writeText($('msg').textContent);
+    btn.textContent = 'Copiado ✓';
+  } catch (_) {
+    const r = document.createRange();
+    r.selectNodeContents($('msg'));
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    btn.textContent = 'Selecione e copie';
+  }
+  setTimeout(() => btn.textContent = 'Copiar texto', 2000);
+}
+function enviar() {
+  if (validar().length) return;
+  const msg = montarMensagem();
+  S.ultimo = {
+    est: Object.fromEntries(S.artes.filter(a => qtdArte(estDe(a.id)) > 0).map(a => [a.id, estDe(a.id)])),
+    posters: S.posters.filter(p => qtdPoster(p) > 0).map(({id, ...rest}) => rest)
+  };
+  salvar();
+  $('revisao').close();
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
+  renderTudo();
+}
+
+/* ── utilidades ── */
+function scrollPara(sel) {
+  setTimeout(() => document.querySelector(sel)?.scrollIntoView({behavior: 'smooth', block: 'center'}), 80);
+}
+
+/* ── eventos (delegação) ── */
+function acao(nome, el) {
+  const id = el.dataset.id;
+  switch (nome) {
+    case 'abrir':
+      S.aberto = S.aberto === id ? null : id;
+      renderArtes(); salvar();
+      if (S.aberto) scrollPara(`[data-card="${id}"]`);
+      break;
+    case 'fechar': S.aberto = null; renderArtes(); salvar(); break;
+    case 'uso': { const x = estDe(id); x.usoUnico = !x.usoUnico; renderArtes(); salvar(); break; }
+    case 'limpar': limparArte(id); break;
+    case 'remover-arte': removerArte(id); break;
+    case 'nova-abrir': toggleNova(true); break;
+    case 'nova-cancelar': toggleNova(false); break;
+    case 'nova-confirmar': novaArte(); break;
+    case 'poster-novo': posterNovo(); break;
+    case 'poster-abrir':
+      S.posterAberto = String(S.posterAberto) === id ? null : id;
+      renderPosters(); salvar();
+      if (S.posterAberto) scrollPara(`[data-poster="${id}"]`);
+      break;
+    case 'poster-fechar': S.posterAberto = null; renderPosters(); salvar(); break;
+    case 'poster-mes': getPoster(id).mes = +el.dataset.v; renderPosters(); salvar(); break;
+    case 'poster-var': getPoster(id).variante = el.dataset.v; renderPosters(); salvar(); break;
+    case 'poster-remover': removerPoster(id); break;
+    case 'repetir': repetir(); break;
+    case 'novo': novo(); break;
+    case 'revisar': abrirRevisao(); break;
+    case 'fechar-revisao': $('revisao').close(); break;
+    case 'copiar': copiar(el); break;
+    case 'enviar': enviar(); break;
+  }
+}
+
+// Segurar o + ou − repete o ajuste (toque e mouse)
+let rep = null;
+function pararRep() { if (rep) { clearTimeout(rep.t); clearInterval(rep.i); rep = null; } }
+document.addEventListener('pointerdown', ev => {
+  const b = ev.target.closest('.step-btn');
+  if (!b) return;
+  ev.preventDefault();
+  pararRep();
+  const f = () => passo(b.dataset.ctx, b.dataset.id, b.dataset.t, +b.dataset.passo);
+  f();
+  rep = {t: setTimeout(() => { rep.i = setInterval(f, 90); }, 400)};
+});
+['pointerup', 'pointercancel', 'pointerleave'].forEach(n => document.addEventListener(n, pararRep, true));
+
+document.addEventListener('click', ev => {
+  const st = ev.target.closest('.step-btn');
+  if (st) {
+    // detail === 0 é clique por teclado; toque e mouse já tratados no pointerdown
+    if (ev.detail === 0) passo(st.dataset.ctx, st.dataset.id, st.dataset.t, +st.dataset.passo);
+    return;
+  }
+  const el = ev.target.closest('[data-acao]');
+  if (el) acao(el.dataset.acao, el);
+});
+
+document.addEventListener('change', ev => {
+  const t = ev.target;
+  if (t.hasAttribute('data-qtd')) {
+    const v = Math.max(0, parseInt(t.value, 10) || 0);
+    const {ctx, id} = t.dataset;
+    if (ctx === 'arte') estDe(id)[t.dataset.t] = v;
+    else { const p = getPoster(id); if (p) p[t.dataset.t] = v; }
+    atualizarValor(ctx, id, t.dataset.t);
+    return;
+  }
+  if (t.dataset.pid) {
+    const p = getPoster(t.dataset.pid);
+    if (p) p.papel = t.value;
+    renderPosters(); atualizarTotais(); salvar();
+    return;
+  }
+  if (t.dataset.f === 'papel') {
+    const x = estDe(t.dataset.id);
+    x.papel = t.value;
+    renderArtes(); atualizarTotais(); salvar();
+  }
+});
+
+document.addEventListener('input', ev => {
+  const t = ev.target;
+  if (t.id === 'nome-pedido') { S.nome = t.value; salvar(); return; }
+  if (t.id === 'busca') { S.filtro = t.value; renderArtes(); return; }
+  if (t.dataset.f && t.dataset.id) {
+    estDe(t.dataset.id)[t.dataset.f] = t.value;
+    if (t.dataset.f === 'papelTexto') { atualizarCard(t.dataset.id); atualizarTotais(); }
+    salvar();
+  }
+});
+
+/* ── inicialização ── */
+(function init() {
+  const h = new Date();
+  $('topo-data').textContent = h.toLocaleDateString('pt-BR', {day: 'numeric', month: 'short', year: 'numeric'});
+  const dd = String(h.getDate()).padStart(2, '0'), mm = String(h.getMonth() + 1).padStart(2, '0');
+  $('nome-pedido').placeholder = `Reposição ${dd}/${mm}`;
+  renderTudo();
+})();
 </script>
 </body>
 </html>
